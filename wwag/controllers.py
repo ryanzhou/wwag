@@ -10,3 +10,8 @@ def index():
 def utilities_init_db():
   database.init_db()
   return redirect(url_for('index'))
+
+@app.route("/players")
+def players():
+  players = database.execute('select * from Player;').fetchall()
+  return render_template('players.html', players=players)

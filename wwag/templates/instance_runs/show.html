@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
 <a href="{{ url_for('instance_runs') }}"><< Back to All Instance Runs</a>
-<h1>Instance Run #{{ instance_run['InstanceRunID'] }} <small>{{ instance_run['Name'] }}</small></h1>
+<h1>Instance Run #{{ instance_run['InstanceRunID'] }} <small><span class="label label-primary">{{ instance_run['CategoryName'] }}</span> {{ instance_run['Name'] }}</small></h1>
 
 <h3>Supervision</h3>
 <p>This instance run was supervised by <a href="{{ url_for('players_show', player_id=instance_run['PlayerID']) }}">{{ instance_run['FirstName'] }} {{ instance_run['LastName'] }}</a> and recorded at {{ instance_run['RecordedTime'] }}.</p>

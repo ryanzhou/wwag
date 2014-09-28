@@ -22,4 +22,10 @@
     {% endfor %}
   </tbody>
 </table>
+<space>
+{% if g.get('current_player') %}
+<a href="{{ url_for('instance_runs_new') }}" class="btn btn-primary">Add a new Instance Run</a>
+{% else %}
+<p>You do not have permissions to add a new instance run.</p>
+{% endif %}
 {% endblock %}

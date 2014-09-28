@@ -64,8 +64,8 @@ def users_login_player():
 def users_login_viewer():
   login_form = forms.LoginForm(request.form)
   if login_form.validate():
-    hashed_password = hashlib.sha256(request.form['password']).hexdigest()
-    viewer = database.execute("SELECT * FROM Viewer WHERE Email = %s AND HashedPassword = %s", (request.form['email'], hashed_password)).fetchone()
+    hashed_password = hashlib.sha256(login_form.password.data).hexdigest()
+    viewer = database.execute("SELECT * FROM Viewer WHERE Email = %s AND HashedPassword = %s", (login_form.email.data, hashed_password)).fetchone()
     if player:
       session['user_type'] = "Viewer"
       session['user_id'] = viewer['ViewerID']
@@ -100,6 +100,24 @@ def instance_runs_show(instance_run_id):
   add_player_form = forms.AddInstanceRunPlayerForm()
   return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form)
 
+@app.route("/instance_runs/new")
+@player_login_required
+def instance_runs_new():
+  instance_run_form = forms.InstanceRunForm()
+  return render_template('instance_runs/new.html', instance_run_form=instance_run_form)
+
+@app.route("/instance_runs/create", methods=['POST'])
+@player_login_required
+def instance_runs_create():
+  instance_run_form = forms.InstanceRunForm(request.form)
+  if instance_run_form.validate():
+    lastrowid = database.execute("INSERT INTO InstanceRun (SupervisorID, Name, RecordedTime, CategoryName) VALUES (%s, %s, %s, %s)", (instance_run_form.supervisor_id.data, instance_run_form.name.data, instance_run_form.recorded_time.data, instance_run_form.category_name.data)).lastrowid
+    database.commit()
+    flash("You have created a new instance run successfully!")
+    return redirect(url_for('instance_runs_show', instance_run_id=lastrowid))
+  else:
+    return render_template('instance_runs/new.html', instance_run_form=instance_run_form)
+
 @app.route("/instance_runs/<instance_run_id>/create_player", methods=['POST'])
 @player_login_required
 def instance_runs_create_player(instance_run_id):
@@ -109,7 +127,7 @@ def instance_runs_create_player(instance_run_id):
   if g.current_player['PlayerID'] == instance_run['PlayerID']:
     if add_player_form.validate():
       try:
-        database.execute("INSERT INTO InstanceRunPlayer (PlayerID, InstanceRunID, PerformanceNotes) VALUES (%s, %s, %s)", (request.form['player_id'], instance_run_id, request.form['performance_notes']))
+        database.execute("INSERT INTO InstanceRunPlayer (PlayerID, InstanceRunID, PerformanceNotes) VALUES (%s, %s, %s)", (add_player_form.player_id.data, instance_run_id, add_player_form.performance_notes.data))
         database.commit()
       except IntegrityError as e:
         return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form, error=e[1])

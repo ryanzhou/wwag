@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Hello world!</h1>
+<h1>Welcome to WWAG</h1>
+<p>WWAG is a diverse family of gamers.</p>
+<space>
+<h3>Visitor Area</h3>
+<a href="{{ url_for('instance_runs') }}">Browse Instance Runs</a>
 
-{% for player in players %}
-<li>{{ player }}</li>
-{% endfor %}
 {% endblock %}

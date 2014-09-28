@@ -66,7 +66,7 @@ def users_login_viewer():
   if login_form.validate():
     hashed_password = hashlib.sha256(login_form.password.data).hexdigest()
     viewer = database.execute("SELECT * FROM Viewer WHERE Email = %s AND HashedPassword = %s", (login_form.email.data, hashed_password)).fetchone()
-    if player:
+    if viewer:
       session['user_type'] = "Viewer"
       session['user_id'] = viewer['ViewerID']
       flash("You have signed in successfully as a viewer.")

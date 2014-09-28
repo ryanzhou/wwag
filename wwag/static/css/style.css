@@ -1,0 +1,31 @@
+body {
+  padding-top: 80px;
+}
+
+.navbar {
+  font-weight: 300;
+  font-size: 16px;
+}
+
+h1 small {
+  display: block;
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+h1 {
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid #EEE;
+}
+
+space {
+  display: block;
+  padding-top: 20px;
+}
+
+.footer {
+  margin-top: 120px;
+  padding: 40px;
+  background: #eeeeee;
+}

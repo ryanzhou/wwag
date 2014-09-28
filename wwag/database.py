@@ -1,10 +1,12 @@
 import MySQLdb
+import MySQLdb.cursors
 from wwag import app
 from flask import g
+import string
 
 def connect_db():
   """Connects to the specific database."""
-  conn = MySQLdb.connect(host=app.config['DB_HOST'], user=app.config['DB_USER'], passwd=app.config['DB_PASSWORD'], db=app.config['DB_DATABASE'], port=app.config['DB_PORT'])
+  conn = MySQLdb.connect(host=app.config['DB_HOST'], user=app.config['DB_USER'], passwd=app.config['DB_PASSWORD'], db=app.config['DB_DATABASE'], port=app.config['DB_PORT'], cursorclass=MySQLdb.cursors.DictCursor)
   return conn
 
 def get_db():
@@ -24,7 +26,22 @@ def init_db():
   """Initializes the application database with schema.sql."""
   db = get_db()
   with app.open_resource('../schema.sql', mode='r') as f:
-    db.cursor().execute(f.read())
+    statements = string.split(f.read(), ";")
+    for statement in statements[:-1]:
+      db.cursor().execute(statement)
+  db.commit()
+
+def seed_db():
+  """Seeds the application database with seeds.sql."""
+  db = get_db()
+  with app.open_resource('../seeds.sql', mode='r') as f:
+    statements = string.split(f.read(), ";")
+    for statement in statements[:-1]:
+      db.cursor().execute(statement)
+  db.commit()
+
+def commit():
+  db = get_db()
   db.commit()
 
 @app.teardown_appcontext

@@ -8,4 +8,5 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 import wwag.database
-import wwag.controllers
+import wwag.views
+import wwag.context_processors

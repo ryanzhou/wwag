@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Utilities <small>Manage database structure and content</small></h1>
+
+<h3>Load schema</h3>
+<p>Execute the built-in "schema.sql" file in the database, statement by statement. <strong>This will erase all the existing data!</strong></p>
+<form action="{{ url_for('utilities_init_db') }}" method="post">
+  <input type="submit" value="Load schema" class="btn btn-primary"></input>
+</form>
+<space>
+<h3>Seed data</h3>
+<p>This action will import some example data into the database.</p>
+<form action="{{ url_for('utilities_seed_db') }}" method="post">
+  <input type="submit" value="Seed database" class="btn btn-primary"></input>
+</form>
+{% endblock %}

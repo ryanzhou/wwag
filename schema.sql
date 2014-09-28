@@ -36,6 +36,7 @@ CREATE TABLE `Player` (
   `GameHandle` VARCHAR(50) NOT NULL,
   `Phone` VARCHAR(14),
   `VoiP` VARCHAR(30) NOT NULL,
+  `HashedPassword` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`PlayerID`, `SupervisorID`),
   FOREIGN KEY (`SupervisorID`) REFERENCES `Player` (`PlayerID`)
 ) ENGINE=InnoDB;
@@ -71,6 +72,7 @@ CREATE TABLE `Viewer` (
   `ViewerType` CHAR(1) NOT NULL,
   `DateOfBirth` DATE,
   `Email` VARCHAR(50),
+  `HashedPassword` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`ViewerID`)
 ) ENGINE=InnoDB;
 

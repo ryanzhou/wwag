@@ -9,7 +9,13 @@
         <li><a href="#">Link</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        {% if g.current_player %}
+        <li><a>Signed in as <strong>{{ g.current_player['FirstName'] }} {{ g.current_player['LastName'] }}</strong> (Player)</a></li>
+        <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
+        {% elif g.current_viewer %}
+        {% else %}
         <li><a href="{{ url_for('users_login') }}">Sign In</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>

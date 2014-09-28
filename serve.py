@@ -1,3 +1,3 @@
 from wsgiref.handlers import CGIHandler
-from wwag import ap
+from wwag import app
 CGIHandler().run(app)

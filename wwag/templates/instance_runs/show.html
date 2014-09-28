@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block content %}
+<a href="{{ url_for('instance_runs') }}"><< Back to All Instance Runs</a>
+<h1>Instance Run #{{ instance_run['InstanceRunID'] }} <small>{{ instance_run['Name'] }}</small></h1>
+
+<h3>Supervision</h3>
+<p>This instance run was supervised by <a href="{{ url_for('players_show', player_id=instance_run['PlayerID']) }}">{{ instance_run['FirstName'] }} {{ instance_run['LastName'] }}</a> and recorded at {{ instance_run['RecordedTime'] }}.</p>
+<space>
+<h3>Players</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Performance Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for instance_run_player in instance_run_players %}
+    <tr>
+      <td><a href="{{ url_for('players_show', player_id=instance_run_player['PlayerID']) }}">{{ instance_run_player['FirstName'] }} {{ instance_run_player['LastName'] }}</td>
+      <td>{{ instance_run_player['PerformanceNotes'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<space>
+
+<h3>Add Player</h3>
+{% if  g.get('current_player') and instance_run['PlayerID'] == g.current_player.get('PlayerID') %}
+{% else %}
+<p>You can't manage this instance run because you're not the supervisor.</p>
+{% endif %}
+{% endblock %}

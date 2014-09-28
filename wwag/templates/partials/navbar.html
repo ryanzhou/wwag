@@ -6,7 +6,7 @@
     <div class="navbar-collapse collapse navbar-inverse-collapse">
       <ul class="nav navbar-nav">
         <li><a href="{{ url_for('index') }}">Home</a></li>
-        <li><a href="#">Link</a></li>
+        <li><a href="{{ url_for('instance_runs') }}">Instance Runs</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if g.current_player %}

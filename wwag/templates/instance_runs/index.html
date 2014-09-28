@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Instance Runs <small>Last 100 Recorded Instance Runs</small></h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Instance Run</th>
+      <th>Supervisor</th>
+      <th>Recorded Time</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for instance_run in instance_runs %}
+    <tr>
+      <td><a href="{{ url_for('instance_runs_show', instance_run_id=instance_run['InstanceRunID']) }}">#{{ instance_run['InstanceRunID'] }} {{ instance_run['Name'] }}</a></td>
+      <td><a href="{{ url_for('players_show', player_id=instance_run['PlayerID']) }}">{{ instance_run['FirstName'] }} {{ instance_run['LastName'] }}</a></td>
+      <td>{{ instance_run['RecordedTime'] }}</td>
+      <td>{{ instance_run['CategoryName'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

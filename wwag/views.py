@@ -1,5 +1,6 @@
 from flask import render_template, request, flash, redirect, url_for, make_response, session, g
 from wwag import app, database, forms
+from wwag.decorators import player_login_required, viewer_login_required
 import hashlib
 
 @app.before_request
@@ -10,6 +11,10 @@ def before_request():
   elif session.get('user_type') == "Viewer":
     viewer = database.execute("SELECT * FROM Viewer WHERE ViewerID = %s", (session.get('user_id'),)).fetchone()
     g.current_viewer = viewer
+
+def require_player_session():
+  if not session.get('user_type') == "Player":
+    return redirect
 
 @app.route("/")
 def index():
@@ -35,7 +40,8 @@ def utilities_seed_db():
 @app.route("/users/login")
 def users_login():
   login_form = forms.LoginForm()
-  return render_template('users/login.html', login_form=login_form)
+
+  return render_template('users/login.html', login_form=login_form, error=request.args.get('error'))
 
 @app.route("/users/login_player", methods=['POST'])
 def users_login_player():
@@ -77,10 +83,27 @@ def users_logout():
   return redirect(url_for('index'))
 
 @app.route("/dashboard")
+@player_login_required
 def dashboard():
   return render_template('dashboard/index.html')
+
+@app.route("/instance_runs")
+def instance_runs():
+  instance_runs = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID ORDER BY RecordedTime DESC LIMIT 100").fetchall()
+  return render_template('instance_runs/index.html', instance_runs=instance_runs)
+
+@app.route("/instance_runs/<instance_run_id>")
+def instance_runs_show(instance_run_id):
+  instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s", (instance_run_id,)).fetchone()
+  instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s", (instance_run_id,)).fetchall()
+  return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players)
 
 @app.route("/players")
 def players():
   players = database.execute('select * from Player;').fetchall()
   return render_template('players.html', players=players)
+
+@app.route("/players/<player_id>")
+def players_show(player_id):
+  player = database.execute("SELECT * FROM Player WHERE PlayerID = %s", (player_id,)).fetchone()
+  return render_template('players/show.html', player=player)

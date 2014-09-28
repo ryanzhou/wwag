@@ -1,5 +1,10 @@
+html {
+  background: #EEE;
+}
+
 body {
   padding-top: 100px;
+  background: #FFF;
 }
 
 .navbar {

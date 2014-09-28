@@ -1,6 +1,7 @@
 from flask import render_template, request, flash, redirect, url_for, make_response, session, g
 from wwag import app, database, forms
 from wwag.decorators import player_login_required, viewer_login_required
+from MySQLdb import IntegrityError
 import hashlib
 
 @app.before_request
@@ -96,7 +97,28 @@ def instance_runs():
 def instance_runs_show(instance_run_id):
   instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s", (instance_run_id,)).fetchone()
   instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s", (instance_run_id,)).fetchall()
-  return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players)
+  add_player_form = forms.AddInstanceRunPlayerForm()
+  return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form)
+
+@app.route("/instance_runs/<instance_run_id>/create_player", methods=['POST'])
+@player_login_required
+def instance_runs_create_player(instance_run_id):
+  instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s", (instance_run_id,)).fetchone()
+  instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s", (instance_run_id,)).fetchall()
+  add_player_form = forms.AddInstanceRunPlayerForm(request.form)
+  if g.current_player['PlayerID'] == instance_run['PlayerID']:
+    if add_player_form.validate():
+      try:
+        database.execute("INSERT INTO InstanceRunPlayer (PlayerID, InstanceRunID, PerformanceNotes) VALUES (%s, %s, %s)", (request.form['player_id'], instance_run_id, request.form['performance_notes']))
+        database.commit()
+      except IntegrityError as e:
+        return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form, error=e[1])
+      flash("Player performance tracked successfully!")
+      return redirect(url_for('instance_runs_show', instance_run_id=instance_run_id))
+    else:
+      return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form)
+  else:
+    return redirect(url_for('instance_runs_show', instance_run_id=instance_run_id))
 
 @app.route("/players")
 def players():

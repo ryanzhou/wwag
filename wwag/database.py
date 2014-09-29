@@ -1,7 +1,7 @@
 import MySQLdb
 import MySQLdb.cursors
 from wwag import app
-from flask import g
+from flask import g, flash
 import string
 
 def connect_db():
@@ -19,7 +19,11 @@ def get_db():
 def execute(query, args=()):
   """Execute a query in the database."""
   cursor = get_db().cursor()
-  cursor.execute(query, args)
+  try:
+    cursor.execute(query, args)
+  finally:
+    if app.config['DEBUG']:
+      flash(cursor._last_executed, 'db_debug')
   return cursor
 
 def init_db():
@@ -28,8 +32,8 @@ def init_db():
   with app.open_resource('../schema.sql', mode='r') as f:
     statements = string.split(f.read(), ";")
     for statement in statements[:-1]:
-      db.cursor().execute(statement)
-  db.commit()
+      execute(statement)
+  commit()
 
 def seed_db():
   """Seeds the application database with seeds.sql."""
@@ -37,8 +41,8 @@ def seed_db():
   with app.open_resource('../seeds.sql', mode='r') as f:
     statements = string.split(f.read(), ";")
     for statement in statements[:-1]:
-      db.cursor().execute(statement)
-  db.commit()
+      execute(statement)
+  commit()
 
 def commit():
   db = get_db()

@@ -1,6 +1,6 @@
 <div class="flashes">
   <div class="container">
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(category_filter=["notice"]) %}
     {% if messages %}
     <div class="alert alert-success">
       <h4>Message</h4>

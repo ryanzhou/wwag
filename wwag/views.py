@@ -7,10 +7,10 @@ import hashlib
 @app.before_request
 def before_request():
   if session.get('user_type') == "Player":
-    player = database.execute("SELECT * FROM Player WHERE PlayerID = %s", (session.get('user_id'),)).fetchone()
+    player = database.execute("SELECT * FROM Player WHERE PlayerID = %s;", (session.get('user_id'),)).fetchone()
     g.current_player = player
   elif session.get('user_type') == "Viewer":
-    viewer = database.execute("SELECT * FROM Viewer WHERE ViewerID = %s", (session.get('user_id'),)).fetchone()
+    viewer = database.execute("SELECT * FROM Viewer WHERE ViewerID = %s;", (session.get('user_id'),)).fetchone()
     g.current_viewer = viewer
 
 def require_player_session():
@@ -29,13 +29,13 @@ def utilities():
 @app.route("/utilities/init_db", methods=['POST'])
 def utilities_init_db():
   database.init_db()
-  flash("Database schema loaded successfully.")
+  flash("Database schema loaded successfully.", 'notice')
   return redirect(url_for('utilities'))
 
 @app.route("/utilities/seed_db", methods=['POST'])
 def utilities_seed_db():
   database.seed_db()
-  flash("Example data imported successfully.")
+  flash("Example data imported successfully.", 'notice')
   return redirect(url_for('utilities'))
 
 @app.route("/users/login")
@@ -49,11 +49,11 @@ def users_login_player():
   login_form = forms.LoginForm(request.form)
   if login_form.validate():
     hashed_password = hashlib.sha256(request.form['password']).hexdigest()
-    player = database.execute("SELECT * FROM Player WHERE Email = %s AND HashedPassword = %s", (request.form['email'], hashed_password)).fetchone()
+    player = database.execute("SELECT * FROM Player WHERE Email = %s AND HashedPassword = %s;", (request.form['email'], hashed_password)).fetchone()
     if player:
       session['user_type'] = "Player"
       session['user_id'] = player['PlayerID']
-      flash("You have logged in successfully as a player.")
+      flash("You have logged in successfully as a player.", 'notice')
       return redirect(url_for('dashboard'))
     else:
       return render_template('users/login.html', login_form=login_form, error="Email or password is incorrect.")
@@ -65,11 +65,11 @@ def users_login_viewer():
   login_form = forms.LoginForm(request.form)
   if login_form.validate():
     hashed_password = hashlib.sha256(login_form.password.data).hexdigest()
-    viewer = database.execute("SELECT * FROM Viewer WHERE Email = %s AND HashedPassword = %s", (login_form.email.data, hashed_password)).fetchone()
+    viewer = database.execute("SELECT * FROM Viewer WHERE Email = %s AND HashedPassword = %s;", (login_form.email.data, hashed_password)).fetchone()
     if viewer:
       session['user_type'] = "Viewer"
       session['user_id'] = viewer['ViewerID']
-      flash("You have signed in successfully as a viewer.")
+      flash("You have signed in successfully as a viewer.", 'notice')
       return redirect(url_for('index'))
     else:
       return render_template('users/login.html', login_form=login_form, error="Email or password is incorrect.")
@@ -80,7 +80,7 @@ def users_login_viewer():
 def users_logout():
   session.pop('user_type')
   session.pop('user_id')
-  flash("You have signed out successfully.")
+  flash("You have signed out successfully.", 'notice')
   return redirect(url_for('index'))
 
 @app.route("/dashboard")
@@ -95,8 +95,9 @@ def instance_runs():
 
 @app.route("/instance_runs/<instance_run_id>")
 def instance_runs_show(instance_run_id):
-  instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s", (instance_run_id,)).fetchone()
-  instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s", (instance_run_id,)).fetchall()
+  instance_run_id = int(instance_run_id)
+  instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s;", (instance_run_id,)).fetchone()
+  instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s;", (instance_run_id,)).fetchall()
   add_player_form = forms.AddInstanceRunPlayerForm()
   return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form)
 
@@ -111,9 +112,9 @@ def instance_runs_new():
 def instance_runs_create():
   instance_run_form = forms.InstanceRunForm(request.form)
   if instance_run_form.validate():
-    lastrowid = database.execute("INSERT INTO InstanceRun (SupervisorID, Name, RecordedTime, CategoryName) VALUES (%s, %s, %s, %s)", (instance_run_form.supervisor_id.data, instance_run_form.name.data, instance_run_form.recorded_time.data, instance_run_form.category_name.data)).lastrowid
+    lastrowid = database.execute("INSERT INTO InstanceRun (SupervisorID, Name, RecordedTime, CategoryName) VALUES (%s, %s, %s, %s);", (instance_run_form.supervisor_id.data, instance_run_form.name.data, instance_run_form.recorded_time.data, instance_run_form.category_name.data)).lastrowid
     database.commit()
-    flash("You have created a new instance run successfully!")
+    flash("You have created a new instance run successfully!", 'notice')
     return redirect(url_for('instance_runs_show', instance_run_id=lastrowid))
   else:
     return render_template('instance_runs/new.html', instance_run_form=instance_run_form)
@@ -121,17 +122,17 @@ def instance_runs_create():
 @app.route("/instance_runs/<instance_run_id>/create_player", methods=['POST'])
 @player_login_required
 def instance_runs_create_player(instance_run_id):
-  instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s", (instance_run_id,)).fetchone()
-  instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s", (instance_run_id,)).fetchall()
+  instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s;", (instance_run_id,)).fetchone()
+  instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s;", (instance_run_id,)).fetchall()
   add_player_form = forms.AddInstanceRunPlayerForm(request.form)
   if g.current_player['PlayerID'] == instance_run['PlayerID']:
     if add_player_form.validate():
       try:
-        database.execute("INSERT INTO InstanceRunPlayer (PlayerID, InstanceRunID, PerformanceNotes) VALUES (%s, %s, %s)", (add_player_form.player_id.data, instance_run_id, add_player_form.performance_notes.data))
+        database.execute("INSERT INTO InstanceRunPlayer (PlayerID, InstanceRunID, PerformanceNotes) VALUES (%s, %s, %s);", (add_player_form.player_id.data, instance_run_id, add_player_form.performance_notes.data))
         database.commit()
       except IntegrityError as e:
         return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form, error=e[1])
-      flash("Player performance tracked successfully!")
+      flash("Player performance tracked successfully!", 'notice')
       return redirect(url_for('instance_runs_show', instance_run_id=instance_run_id))
     else:
       return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form)

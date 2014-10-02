@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, validators
 from wwag import app, database
 
 def all_players():
@@ -22,3 +22,9 @@ class InstanceRunForm(Form):
 class AddInstanceRunPlayerForm(Form):
   player_id = SelectField('Player', coerce=int, choices=all_players())
   performance_notes = TextAreaField('Performance Notes', [validators.optional(), validators.length(max=200)])
+
+class ViewerRegistrationForm(Form):
+  email = StringField('Email', [validators.Email()])
+  password = PasswordField('Password', [validators.Length(min=6, max=128), validators.EqualTo('password_confirmation', message='Passwords must match')])
+  password_confirmation = PasswordField('Password Confirmation')
+  date_of_birth = DateField('Date of Birth', [validators.required()])

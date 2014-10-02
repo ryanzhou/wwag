@@ -1,0 +1,5 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Viewer Registration</h1>
+{{ macros.render_form(form, action_url=url_for('viewers_register')) }}
+{% endblock %}

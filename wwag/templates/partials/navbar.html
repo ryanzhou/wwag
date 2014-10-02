@@ -13,6 +13,8 @@
         <li><a>Signed in as <strong>{{ g.current_player['FirstName'] }} {{ g.current_player['LastName'] }}</strong> (Player)</a></li>
         <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
         {% elif g.current_viewer %}
+        <li><a>Signed in as <strong>{{ g.current_viewer['Email'] }}</strong> (Viewer)</a></li>
+        <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
         {% else %}
         <li><a href="{{ url_for('users_login') }}">Sign In</a></li>
         {% endif %}

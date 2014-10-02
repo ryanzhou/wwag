@@ -3,8 +3,11 @@ from wwag import app, database
 
 def all_players():
   with app.app_context():
-    players = database.execute("SELECT PlayerID, FirstName, LastName FROM Player").fetchall()
-    return [(p['PlayerID'], "%s %s" % (p['FirstName'],p["LastName"])) for p in players]
+    try:
+      players = database.execute("SELECT PlayerID, FirstName, LastName FROM Player").fetchall()
+      return [(p['PlayerID'], "%s %s" % (p['FirstName'],p["LastName"])) for p in players]
+    except:
+      return []
 
 class LoginForm(Form):
   email = StringField('Email', [validators.Email()])

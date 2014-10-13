@@ -1,6 +1,5 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, SelectMultipleField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, validators
 from wwag import app, database
-
 
 def all_players():
   with app.app_context():
@@ -53,12 +52,3 @@ class VideoForm(Form):
   price = DecimalField('Price', [validators.DataRequired()])
   url = StringField('URL', [validators.URL()])
   video_type = SelectField('Type', choices=[(c, c) for c in ["Just for Fun", "Achievement Attempt", "Role Playing", "Team Challenge"]])
-
-class GameForm(Form):
-  game_name = StringField('Game Name', [validators.Length(min=3, max=50)])
-  game_id = SelectField('Game', coerce=int, choices=all_games())
-  genre = SelectField('Genre', choices=[(c, c) for c in ['Action', 'Adventure', 'Role-playing', 'Simulation', 'Sports']])
-  review = StringField('Review', [validators.Length(min=3, max=50)])
-  classification_rating = SelectField ('ClassificationRating', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
-  platform_notes = SelectMultipleField('PlatformNotes', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
-  cost = DecimalField('Cost', [validators.DataRequired()])

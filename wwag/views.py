@@ -243,12 +243,28 @@ def games_create():
 def videos_add_to_basket(video_id):
   database.execute("INSERT INTO ViewerOrderLine (VideoID, ViewerOrderID, FlagPerk) VALUES (%s, %s, %s);", (video_id, g.open_order['ViewerOrderID'], 0))
   database.commit()
-  flash("Added video to basket!")
+  flash("Added video to basket!", 'notice')
   return redirect(url_for('basket'))
+
+@app.route("/videos/<video_id>/remove_from_basket")
+@viewer_login_required
+def videos_remove_from_basket(video_id):
+  database.execute("DELETE FROM ViewerOrderLine WHERE ViewerOrderID = %s AND VideoID = %s;", (g.open_order['ViewerOrderID'], video_id))
+  database.commit()
+  flash("The video item has been removed from your basket.", 'notice')
+  return redirect(url_for('orders_show', order_id=g.open_order['ViewerOrderID']))
 
 @app.route("/basket")
 @viewer_login_required
 def basket():
+  return redirect(url_for('orders_show', order_id=g.open_order['ViewerOrderID']))
+
+@app.route("/basket/checkout", methods=["POST"])
+@viewer_login_required
+def basket_checkout():
+  database.execute("UPDATE ViewerOrder SET ViewedStatus = 'Pending' WHERE ViewerOrderID = %s", (g.open_order['ViewerOrderID'],))
+  database.commit()
+  flash("You have paid for this order! Now you can watch the videos.", 'notice')
   return redirect(url_for('orders_show', order_id=g.open_order['ViewerOrderID']))
 
 @app.route("/orders/<order_id>")

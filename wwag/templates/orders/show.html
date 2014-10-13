@@ -11,7 +11,11 @@
     {% for order_line in order_lines %}
     <tr>
       <td><a href="{{ url_for('videos_show', video_id=order_line['VideoID']) }}">{{ order_line['VideoName'] }}</a></td>
-      <td class="right">${{ order_line['Price'] }}</td>
+      {% if order_line['FlagPerk'] %}
+        <td class="right"><strike>${{ order_line['Price'] }}</strike> <strong>Free</strong></td>
+      {% else %}
+        <td class="right">${{ order_line['Price'] }}</td>
+      {% endif %}
     </tr>
     {% endfor %}
     <tr>
@@ -20,4 +24,9 @@
     </tr>
   </tbody>
 </table>
+
+{% if order['ViewedStatus'] == "OPEN" %}
+<h3>Checkout</h3>
+<p>Obtain access to the </p>
+{% endif %}
 {% endblock %}

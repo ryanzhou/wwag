@@ -56,9 +56,9 @@ class VideoForm(Form):
 
 class GameForm(Form):
   game_name = StringField('Game Name', [validators.Length(min=3, max=50)])
-  game_id = SelectField('Game', coerce=int, choices=all_games())
   genre = SelectField('Genre', choices=[(c, c) for c in ['Action', 'Adventure', 'Role-playing', 'Simulation', 'Sports']])
   review = StringField('Review', [validators.Length(min=3, max=50)])
+  star_rating = DecimalField('StarRating', [validators.DataRequired()])
   classification_rating = SelectField ('ClassificationRating', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
   platform_notes = SelectMultipleField('PlatformNotes', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
   cost = DecimalField('Cost', [validators.DataRequired()])

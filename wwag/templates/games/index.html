@@ -16,11 +16,12 @@
     <tr>
       <td>{{ game['GameName'] }}</td>
       <td>{{ game['Review'] }}</td>
-      <td>{{ game['StarRating']] }}</td>
-      <td>{{ game['ClassificationRating']] }}</td>
-      <td><a href="{{ game['URL'] }}">Promotion Link</a></td>
+      <td>{{ game['Genre'] }}</td>
+      <td>{{ game['StarRating'] }}</td>
+      <td>{{ game['ClassificationRating'] }}</td>
+      <td><a href="{{ game['PromotionLink'] }}">Promotion Link</a></td>
+      <td>{{ game['Cost']}}</td>
     </tr>
-    <td>{{ game['Cost']}}</td>
     {% endfor %}
   </tbody>
 </table>

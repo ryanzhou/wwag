@@ -231,12 +231,25 @@ def games():
 def games_create():
   form = forms.GameForm(request.form)
   if request.method == "POST" and form.validate():
-    lastrowid = database.execute("INSERT INTO Game (GameName, GameID, Genre, Review, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.game_id.data, form.genre.data, form.review.data, form.classification_rating.data, form.platform_notes.data, form.cost.data)).lastrowid
+    lastrowid = database.execute("INSERT INTO Game (GameName, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, form.platform_notes.data, form.cost.data)).lastrowid
     database.commit()
     flash("You have created a new game successfully!", 'notice')
     return redirect(url_for('games'))
   else:
     return render_template('games/new.html', form=form)
+
+@app.route("/games/<game_id>/update", methods=['GET', 'POST'])
+@player_login_required
+def games_update(game_id):
+  game = database.execute("SELECT * FROM Game WHERE GameID = %s", (game_id,)).fetchone()
+  form = forms.GameForm(request.form, name=game['GameName'], genre=game['Genre'], review=game['Review'], starrating=game['StarRating'], classification=game['ClassificationRating'], platformnotes=game['PlatformNotes'], cost=game['Cost'])
+  if request.method == "POST" and form.validate():
+    database.execute("UPDATE Game SET GameName = %s, Genre = %s, Review = %s,  StarRating = %s, ClassificationRating = %s, PlatformNotes = %s, Cost = %s WHERE GameID = %s", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, form.platform_notes.data, form.cost.data, game['GameID']))
+    database.commit()
+    flash("You have updated the video successfully!", 'notice')
+    return redirect(url_for('games'))
+  else:
+    return render_template('games/edit.html', form=form, video=video)
 
 @app.route("/videos/<video_id>/add_to_basket", methods=['POST'])
 @viewer_login_required

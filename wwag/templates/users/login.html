@@ -3,15 +3,22 @@
 <h1>Sign In <small>Log in as Player or Viewer</small></h1>
 
 <div class="row">
-  <div class="col-sm-4 col-sm-offset-1">
+  <div class="col-sm-3">
     <h3>I'm a Player</h3>
     <space>
     {{ macros.render_form(login_form, action_url=url_for('users_login_player'), action_text='Sign In', class_='form') }}
   </div>
-  <div class="col-sm-4 col-sm-offset-1">
+  <div class="col-sm-3 col-sm-offset-1">
     <h3>I'm a Viewer</h3>
     <space>
     {{ macros.render_form(login_form, action_url=url_for('users_login_viewer'), action_text='Sign In', class_='form') }}
+  </div>
+  <div class="col-sm-3 col-sm-offset-1">
+    <h3>New to WWAG?</h3>
+    <hr>
+    <p>There are many benefits to be registered as a viewer. You can order premium videos and follow our players in real-time.</p>
+    <space>
+    <p><a href="{{ url_for('viewers_new') }}" class="btn btn-primary btn-lg">Sign Up Today</a></p>
   </div>
 </div>
 {% endblock %}

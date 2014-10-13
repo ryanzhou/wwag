@@ -14,7 +14,10 @@
         <li><a>Signed in as <strong>{{ g.current_player['FirstName'] }} {{ g.current_player['LastName'] }}</strong> (Player)</a></li>
         <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
         {% elif g.current_viewer %}
-        <li><a>Signed in as <strong>{{ g.current_viewer['Email'] }}</strong> (Viewer)</a></li>
+        {% if g.open_order %}
+        <li><a href="{{ url_for('orders_show', order_id=g.open_order['ViewerOrderID']) }}">Basket <span class="label label-info">{{ open_order_items_count }}</span></a></li>
+        {% endif %}
+        <li><a><small>{{ g.current_viewer['Email'] }}</small></a></li>
         <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
         {% else %}
         <li><a href="{{ url_for('users_login') }}">Sign In</a></li>

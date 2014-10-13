@@ -7,16 +7,26 @@ from datetime import datetime
 
 @app.before_request
 def before_request():
+  if '/static/' in request.path:
+    return
   if session.get('user_type') == "Player":
     player = database.execute("SELECT * FROM Player WHERE PlayerID = %s;", (session.get('user_id'),)).fetchone()
     g.current_player = player
   elif session.get('user_type') == "Viewer":
     viewer = database.execute("SELECT * FROM Viewer WHERE ViewerID = %s;", (session.get('user_id'),)).fetchone()
-    g.current_viewer = viewer
+    if viewer:
+      g.current_viewer = viewer
+      g.open_order = open_order()
 
-def require_player_session():
-  if not session.get('user_type') == "Player":
-    return redirect
+def open_order():
+  viewer_id = g.current_viewer['ViewerID']
+  open_order = database.execute("SELECT * FROM ViewerOrder WHERE ViewerID = %s AND ViewedStatus = 'OPEN';", (viewer_id,)).fetchone()
+  if open_order:
+    return open_order
+  else:
+    lastrowid = database.execute("INSERT INTO ViewerOrder (OrderDate, ViewedStatus, ViewerID) VALUES (%s, %s, %s);", (datetime.now().date(), "OPEN", viewer_id)).lastrowid
+    database.commit()
+    return database.execute("SELECT * FROM ViewerOrder WHERE ViewerID = %s AND ViewedStatus = 'OPEN';", (viewer_id,)).fetchone()
 
 @app.route("/")
 def index():
@@ -173,6 +183,11 @@ def videos():
   videos = database.execute("SELECT * FROM Video NATURAL JOIN InstanceRun ORDER BY ViewCount DESC;").fetchall()
   return render_template('videos/index.html',videos=videos)
 
+@app.route("/videos/<video_id>")
+def videos_show(video_id):
+  video = database.execute("SELECT * FROM Video NATURAL JOIN InstanceRun WHERE VideoID = %s", (video_id,)).fetchone()
+  return render_template('videos/show.html', video=video)
+
 @app.route("/videos/create", methods=['GET', 'POST'])
 @player_login_required
 def videos_create():
@@ -205,3 +220,24 @@ def videos_delete(video_id):
   database.commit()
   flash("You have deleted the video.", 'notice')
   return redirect(url_for('videos'))
+
+@app.route("/videos/<video_id>/add_to_basket", methods=['POST'])
+@viewer_login_required
+def videos_add_to_basket(video_id):
+  database.execute("INSERT INTO ViewerOrderLine (VideoID, ViewerOrderID, FlagPerk) VALUES (%s, %s, %s);", (video_id, g.open_order['ViewerOrderID'], 0))
+  database.commit()
+  flash("Added video to basket!")
+  return redirect(url_for('basket'))
+
+@app.route("/basket")
+@viewer_login_required
+def basket():
+  return redirect(url_for('orders_show', order_id=g.open_order['ViewerOrderID']))
+
+@app.route("/orders/<order_id>")
+@viewer_login_required
+def orders_show(order_id):
+  order = database.execute("SELECT * FROM ViewerOrder WHERE ViewerOrderID = %s AND ViewerID = %s;", (order_id, g.current_viewer['ViewerID'])).fetchone()
+  order_lines = database.execute("SELECT * FROM ViewerOrderLine NATURAL JOIN Video WHERE ViewerOrderID = %s;", (order['ViewerOrderID'],)).fetchall()
+  order_total = database.execute("SELECT SUM(Price) AS Total FROM ViewerOrderLine NATURAL JOIN Video WHERE ViewerOrderID = %s", (order['ViewerOrderID'],)).fetchone()["Total"]
+  return render_template('orders/show.html', order=order, order_lines=order_lines, order_total=order_total)

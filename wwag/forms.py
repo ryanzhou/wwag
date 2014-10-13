@@ -1,7 +1,6 @@
 from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, SelectMultipleField, validators
 from wwag import app, database
 
-
 def all_players():
   with app.app_context():
     try:

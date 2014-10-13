@@ -10,4 +10,8 @@
 <h3>Purchase this Video</h3>
 <p>This video costs <strong>${{ video['Price'] }}</strong>.</p>
 <p>{{ button_to(url_for('videos_add_to_basket', video_id=video['VideoID']), "Add to Basket") | safe }}</p>
+
+<h3>Watch video</h3>
+<iframe width="560" height="315" src="//www.youtube.com/embed/XqLTe8h0-jo" frameborder="0" allowfullscreen></iframe>
+
 {% endblock %}

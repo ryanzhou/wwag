@@ -10,7 +10,12 @@
   <tbody>
     {% for order_line in order_lines %}
     <tr>
-      <td><a href="{{ url_for('videos_show', video_id=order_line['VideoID']) }}">{{ order_line['VideoName'] }}</a></td>
+      <td>
+        <a href="{{ url_for('videos_show', video_id=order_line['VideoID']) }}">{{ order_line['VideoName'] }}</a> &nbsp;
+        {% if order['ViewedStatus'] == "OPEN" %}
+        <small>[<a href="{{ url_for('videos_remove_from_basket', video_id=order_line['VideoID']) }}">Remove</a>]</small>
+        {% endif %}
+      </td>
       {% if order_line['FlagPerk'] %}
         <td class="right"><strike>${{ order_line['Price'] }}</strike> <strong>Free</strong></td>
       {% else %}
@@ -27,6 +32,7 @@
 
 {% if order['ViewedStatus'] == "OPEN" %}
 <h3>Checkout</h3>
-<p>Obtain access to the </p>
+<p>Pay now to instantly access these videos.</p>
+<p>{{ button_to(url_for('basket_checkout'), "Pay $%s now" % (order_total)) | safe }}</p>
 {% endif %}
 {% endblock %}

@@ -3,6 +3,7 @@ from wwag import app, database, forms
 from wwag.decorators import player_login_required, viewer_login_required
 from MySQLdb import IntegrityError
 import hashlib
+from datetime import datetime
 
 @app.before_request
 def before_request():
@@ -165,3 +166,42 @@ def viewers_register():
     return redirect(url_for('users_login'))
   else:
     return render_template('viewers/new.html', form=form)
+
+
+@app.route("/videos")
+def videos():
+  videos = database.execute("SELECT * FROM Video NATURAL JOIN InstanceRun ORDER BY ViewCount DESC;").fetchall()
+  return render_template('videos/index.html',videos=videos)
+
+@app.route("/videos/create", methods=['GET', 'POST'])
+@player_login_required
+def videos_create():
+  form = forms.VideoForm(request.form)
+  if request.method == "POST" and form.validate():
+    lastrowid = database.execute("INSERT INTO Video (VideoName, InstanceRunID, GameID, Price, URL, VideoType, CreatedAt) VALUES (%s, %s, %s, %s, %s, %s, %s);", (form.name.data, form.instance_run_id.data, form.game_id.data, form.price.data, form.url.data, form.video_type.data, datetime.now())).lastrowid
+    database.commit()
+    flash("You have created a new video successfully!", 'notice')
+    return redirect(url_for('videos'))
+  else:
+    return render_template('videos/new.html', form=form)
+
+@app.route("/videos/<video_id>/update", methods=['GET', 'POST'])
+@player_login_required
+def videos_update(video_id):
+  video = database.execute("SELECT * FROM Video WHERE VideoID = %s", (video_id,)).fetchone()
+  form = forms.VideoForm(request.form, name=video['VideoName'], instance_run_id=video['InstanceRunID'], game_id=video['GameID'], price=video['Price'], url=video['URL'], video_type=video['VideoType'])
+  if request.method == "POST" and form.validate():
+    database.execute("UPDATE Video SET VideoName = %s, InstanceRunID = %s, GameID = %s, Price = %s, URL = %s, VideoType = %s WHERE VideoID = %s", (form.name.data, form.instance_run_id.data, form.game_id.data, form.price.data, form.url.data, form.video_type.data, video['VideoID']))
+    database.commit()
+    flash("You have updated the video successfully!", 'notice')
+    return redirect(url_for('videos'))
+  else:
+    return render_template('videos/edit.html', form=form, video=video)
+
+@app.route("/videos/<video_id>/delete", methods=['POST'])
+@player_login_required
+def videos_delete(video_id):
+  database.execute("DELETE FROM Video WHERE VideoID = %s", (video_id,))
+  database.commit()
+  flash("You have deleted the video.", 'notice')
+  return redirect(url_for('videos'))

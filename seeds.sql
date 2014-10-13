@@ -25,3 +25,12 @@ VALUES
 (1, 2, "Jill is very skillful, as usual."),
 (2, 2, "Maybe Charles's internet wasn't working so well that day. His actions were a bit slow."),
 (3, 2, "This was David's first play in WWAG. He definitely had a good time.");
+
+INSERT INTO `Game` (GameID, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost)
+VALUES
+(1, "Comic", "This is excellent", 5, "PG", "Windows only", "http://www.lol.com", 49.99);
+
+INSERT INTO `Video` (VideoID, VideoName, CreatedAt, ViewCount, URL, Price, VideoType, InstanceRunID, GameID)
+VALUES
+(1, "Attack on Zebras Take 1", "2002-11-19 19:34:20", 137, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1),
+(2, "Attack on Zebras Take 2", "2002-11-20 19:34:20", 46, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1);

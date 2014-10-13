@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, validators
 from wwag import app, database
 
 def all_players():
@@ -6,6 +6,22 @@ def all_players():
     try:
       players = database.execute("SELECT PlayerID, FirstName, LastName FROM Player").fetchall()
       return [(p['PlayerID'], "%s %s" % (p['FirstName'],p["LastName"])) for p in players]
+    except:
+      return []
+
+def all_instance_runs():
+  with app.app_context():
+    try:
+      instance_runs = database.execute("SELECT InstanceRunID, Name FROM InstanceRun").fetchall()
+      return [(i['InstanceRunID'], i['Name']) for i in instance_runs]
+    except:
+      return []
+
+def all_games():
+  with app.app_context():
+    try:
+      games = database.execute("SELECT GameID, Genre FROM Game").fetchall()
+      return [(g['GameID'], g['Genre']) for g in games]
     except:
       return []
 
@@ -28,3 +44,11 @@ class ViewerRegistrationForm(Form):
   password = PasswordField('Password', [validators.Length(min=6, max=128), validators.EqualTo('password_confirmation', message='Passwords must match')])
   password_confirmation = PasswordField('Password Confirmation')
   date_of_birth = DateField('Date of Birth', [validators.required()])
+
+class VideoForm(Form):
+  name = StringField('Video Name', [validators.Length(min=3, max=50)])
+  instance_run_id = SelectField('Instance Run', coerce=int, choices=all_instance_runs())
+  game_id = SelectField('Game', coerce=int, choices=all_games())
+  price = DecimalField('Price', [validators.DataRequired()])
+  url = StringField('URL', [validators.URL()])
+  video_type = SelectField('Type', choices=[(c, c) for c in ["Just for Fun", "Achievement Attempt", "Role Playing", "Team Challenge"]])

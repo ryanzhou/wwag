@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Popular Videos</h1>
+<table class="table">
+  <thead>
+    <th>Video Name</th>
+    <th>Instance Run</th>
+    <th>Published Date</th>
+    <th>View Count</th>
+    <th>Link</th>
+  </thead>
+  <tbody>
+    {% for video in videos %}
+    <tr>
+      <td>{{ video['VideoName'] }}</td>
+      <td><a href="{{ url_for('instance_runs_show', instance_run_id=video['InstanceRunID']) }}">{{ video['Name'] }}</a></td>
+      <td>{{ video['CreatedAt'] }}</td>
+      <td>{{ video['ViewCount'] }}</td>
+      <td><a href="{{ video['URL'] }}">Watch</a> - <a href="{{ url_for('videos_update', video_id=video['VideoID']) }}">Edit Video</a> - {{ button_to(url_for('videos_delete', video_id=video['VideoID']), 'Delete Video') | safe }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{{ url_for('videos_create') }}">Add a new Video</a>
+
+{% endblock %}

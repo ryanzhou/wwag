@@ -35,3 +35,7 @@ space {
   padding: 40px;
   background: #eeeeee;
 }
+
+.right {
+  text-align: right;
+}

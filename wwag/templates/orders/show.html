@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Order #{{ order['ViewerOrderID'] }}</h1>
+
+<table class="table">
+  <thead>
+    <th>Video Item</th>
+    <th class="right">Price</th>
+  </thead>
+  <tbody>
+    {% for order_line in order_lines %}
+    <tr>
+      <td><a href="{{ url_for('videos_show', video_id=order_line['VideoID']) }}">{{ order_line['VideoName'] }}</a></td>
+      <td class="right">${{ order_line['Price'] }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td><strong>Grand Total</strong></td>
+      <td class="right"><strong>${{ order_total }}</strong></td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

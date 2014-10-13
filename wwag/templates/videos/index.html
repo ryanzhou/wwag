@@ -12,7 +12,7 @@
   <tbody>
     {% for video in videos %}
     <tr>
-      <td>{{ video['VideoName'] }}</td>
+      <td><a href="{{ url_for('videos_show', video_id=video['VideoID']) }}">{{ video['VideoName'] }}</a></td>
       <td><a href="{{ url_for('instance_runs_show', instance_run_id=video['InstanceRunID']) }}">{{ video['Name'] }}</a></td>
       <td>{{ video['CreatedAt'] }}</td>
       <td>{{ video['ViewCount'] }}</td>

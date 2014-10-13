@@ -256,5 +256,5 @@ def basket():
 def orders_show(order_id):
   order = database.execute("SELECT * FROM ViewerOrder WHERE ViewerOrderID = %s AND ViewerID = %s;", (order_id, g.current_viewer['ViewerID'])).fetchone()
   order_lines = database.execute("SELECT * FROM ViewerOrderLine NATURAL JOIN Video WHERE ViewerOrderID = %s;", (order['ViewerOrderID'],)).fetchall()
-  order_total = database.execute("SELECT SUM(Price) AS Total FROM ViewerOrderLine NATURAL JOIN Video WHERE ViewerOrderID = %s", (order['ViewerOrderID'],)).fetchone()["Total"]
+  order_total = database.execute("SELECT SUM(Price) AS Total FROM ViewerOrderLine NATURAL JOIN Video WHERE ViewerOrderID = %s AND FlagPerk = '0'", (order['ViewerOrderID'],)).fetchone()["Total"]
   return render_template('orders/show.html', order=order, order_lines=order_lines, order_total=order_total)

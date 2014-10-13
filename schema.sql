@@ -141,6 +141,7 @@ CREATE TABLE `Achievement` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `Game` (
+  `GameName` VARCHAR(50),
   `GameID` SMALLINT NOT NULL AUTO_INCREMENT,
   `Genre` VARCHAR(50),
   `Review` TEXT,

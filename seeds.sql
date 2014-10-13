@@ -29,8 +29,39 @@ VALUES
 INSERT INTO `Game` (GameID, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost)
 VALUES
 (1, "Comic", "This is excellent", 5, "PG", "Windows only", "http://www.lol.com", 49.99);
+(2, "War", "This is scary", 4.7, "MG", "Andriod only", "http://www.lol.com", 39.99),
+(3, "War", "This is scary and interesting", 5, "PG", "All platforms", "http://www.lol.com", 69.99),
+(4, "comic", "This is cool", 4.9, "EG", "Andriod only", "http://www.lol.com", 39.99),
+
+
+
+
+
+
+
+
+
+
 
 INSERT INTO `Video` (VideoID, VideoName, CreatedAt, ViewCount, URL, Price, VideoType, InstanceRunID, GameID)
 VALUES
 (1, "Attack on Zebras Take 1", "2002-11-19 19:34:20", 137, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1),
-(2, "Attack on Zebras Take 2", "2002-11-20 19:34:20", 46, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1);
+(2, "Attack on Zebras Take 2", "2002-11-20 19:34:20", 46, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1),
+(3,"Attack on Zebras Take 3","2000-10-22 09:12:21",200,"http://www.youtube.com/dkgriehg",5.6,"Role Playing",1,1)
+
+INSERT INTO  'ViewerOrderLine' (VideoID,ViewerOrderID,FlagPek)
+VALUES 
+(1,1,true),
+(1,2,flase),
+(2,3,true);
+
+INSERT INTO GameDistributorAddress(AddressID,GameDistributorID,StartDate,EndDate)
+VALUES
+(1,1,NULL,21-08-2019),
+(1,1,NULL,21-07-2018),
+(1,1,15-08-2013,21-08-2020);
+
+
+INSERT INTO  GameDistributorOrder(Gam)
+
+

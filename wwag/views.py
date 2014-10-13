@@ -205,3 +205,20 @@ def videos_delete(video_id):
   database.commit()
   flash("You have deleted the video.", 'notice')
   return redirect(url_for('videos'))
+
+@app.route("/games")
+def games():
+  games = database.execute("SELECT * FROM Game NATURAL JOIN InstanceRun ORDER BY StarRating DESC;").fetchall()
+  return render_template('games/index.html',games=games)
+
+@app.route("/games/create", methods=['GET', 'POST'])
+@player_login_required
+def games_create():
+  form = forms.GameForm(request.form)
+  if request.method == "POST" and form.validate():
+    lastrowid = database.execute("INSERT INTO Game (GameName, GameID, Genre, Review, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.game_id.data, form.genre.data, form.review.data, form.classificationrating.data, form.platformNotes.data, form.Cost.data )).lastrowid
+    database.commit()
+    flash("You have created a new game successfully!", 'notice')
+    return redirect(url_for('games'))
+  else:
+    return render_template('games/new.html', form=form)

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Games</h1>
+<table class="table">
+  <thead>
+    <th>Game Name</th>
+    <th>Review</th>
+    <th>Genre</th>
+    <th>Star Rating</th>
+    <th>Classification Rating</th>
+    <th>Promotion</th>
+    <th>Price</th>
+  </thead>
+  <tbody>
+    {% for game in games %}
+    <tr>
+      <td>{{ game['GameName'] }}</td>
+      <td>{{ game['Review'] }}</td>
+      <td>{{ game['StarRating']] }}</td>
+      <td>{{ game['ClassificationRating']] }}</td>
+      <td><a href="{{ game['URL'] }}">Promotion Link</a></td>
+    </tr>
+    <td>{{ game['Cost']}}</td>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{{ url_for('games_create') }}">Add a new Game</a>
+
+{% endblock %}

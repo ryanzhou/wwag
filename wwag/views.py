@@ -221,7 +221,6 @@ def videos_delete(video_id):
   flash("You have deleted the video.", 'notice')
   return redirect(url_for('videos'))
 
-<<<<<<< HEAD
 @app.route("/games")
 def games():
   games = database.execute("SELECT * FROM Game NATURAL JOIN InstanceRun ORDER BY StarRating DESC;").fetchall()

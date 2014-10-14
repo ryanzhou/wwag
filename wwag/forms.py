@@ -59,5 +59,5 @@ class GameForm(Form):
   review = StringField('Review', [validators.Length(min=3, max=50)])
   star_rating = DecimalField('StarRating', [validators.DataRequired()])
   classification_rating = SelectField ('ClassificationRating', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
-  platform_notes = SelectMultipleField('PlatformNotes', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
+  platform_notes = SelectMultipleField('PlatformNotes', choices=[(c, c) for c in ["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
   cost = DecimalField('Cost', [validators.DataRequired()])

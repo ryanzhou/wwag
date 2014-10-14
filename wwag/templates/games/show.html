@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Game: {{game['GameName']}}</h1>
+<ul>
+  <li><b>GameID:</b> {{game['GameID']}}</li>
+  <li><b>Genre:</b> {{game['Genre']}}</li>          <li><b>StarRating:</b> {{game['StarRating']}}</li>
+  <li><b>Review:</b> {{game['Review']}}</li>
+  <li><b>Classification Rating:</b> {{game['ClassificationRating']}}</li>
+  <li><b>Platform:</b> {{game['PlatformNotes']}}</li>
+  <li><b>Promotion Link:</b> {{game['PromotionLink']}}</li>
+  <li><b>Price:</b> {{game['Cost']}}</li>
+</ul>
+<ul><a href="{{ url_for('games') }}">Return to All Games</a></ul>
+{% endblock %}

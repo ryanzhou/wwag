@@ -267,6 +267,11 @@ def games_update(game_id):
   else:
     return render_template('games/edit.html', form=form, game=game)
 
+@app.route("/games/<game_id>")
+def games_show(game_id):
+  game = database.execute("SELECT * FROM Game WHERE GameID = %s", (game_id,)).fetchone()
+  return render_template('games/show.html', game=game)
+
 @app.route("/videos/<video_id>/add_to_basket", methods=['POST'])
 @viewer_login_required
 def videos_add_to_basket(video_id):

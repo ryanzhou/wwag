@@ -49,7 +49,7 @@ class VideoForm(Form):
   name = StringField('Video Name', [validators.Length(min=3, max=50)])
   instance_run_id = SelectField('Instance Run', coerce=int, choices=all_instance_runs())
   game_id = SelectField('Game', coerce=int, choices=all_games())
-  price = DecimalField('Price', [validators.DataRequired()])
+  price = DecimalField('Price')
   url = StringField('URL', [validators.URL()])
   video_type = SelectField('Type', choices=[(c, c) for c in ["Just for Fun", "Achievement Attempt", "Role Playing", "Team Challenge"]])
 

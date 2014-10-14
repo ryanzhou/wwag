@@ -35,6 +35,7 @@ VALUES
 
 INSERT INTO `Video` (VideoID, VideoName, CreatedAt, ViewCount, URL, Price, VideoType, InstanceRunID, GameID)
 VALUES
-(1, "Attack on Zebras Take 1", "2002-11-19 19:34:20", 137, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1),
-(2, "Attack on Zebras Take 2", "2002-11-20 19:34:20", 46, "http://www.youtube.com/dsghiehg", 4.99, "Role Playing", 1, 1),
-(3,"Attack on Zebras Take 3","2000-10-22 09:12:21",200,"//www.youtube.com/embed/OZYJcI8Akg8",5.6,"Role Playing",1,1);
+(1, "The Walking Dead Survival Instinct", "2012-11-19 19:34:20", 137, "http://www.youtube.com/embed/3pfJzK1tdR0", 4.99, "Role Playing", 1, 1),
+(2, "Minecraft Xbox - Big Board Game", "2012-11-20 19:34:20", 46, "http://www.youtube.com/embed/r7gC7-loff8", 0.00, "Role Playing", 2, 1),
+(3, "The Amazing Spider-Man 2","2013-10-22 09:12:21",200,"http://www.youtube.com/embed/o9kr9ZhydK0",5.60,"Role Playing",3,1),
+(4, "The LEGO Movie Videogame","2014-05-02 09:12:21",200,"http://www.youtube.com/embed/cufUOd29f8U",0.00,"Role Playing",2,1);

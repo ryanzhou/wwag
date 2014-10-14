@@ -39,7 +39,7 @@
 </div>
 {% endif %}
 
-{% if order['ViewedStatus'] == "OPEN" and order_total > 0 %}
+{% if order['ViewedStatus'] == "Open" and order_total > 0 %}
 <div class="well well-lg right">
 <p>Instantly access this order for ${{ order_total }}</p>
 <p>{{ button_to(url_for('basket_checkout'), "Checkout", "btn-primary") | safe }}</p>

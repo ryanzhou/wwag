@@ -223,7 +223,7 @@ def videos_delete(video_id):
 
 @app.route("/games")
 def games():
-  games = database.execute("SELECT * FROM Game NATURAL JOIN InstanceRun ORDER BY StarRating DESC;").fetchall()
+  games = database.execute("SELECT * FROM Game ORDER BY StarRating DESC;").fetchall()
   return render_template('games/index.html',games=games)
 
 @app.route("/games/create", methods=['GET', 'POST'])
@@ -242,14 +242,14 @@ def games_create():
 @player_login_required
 def games_update(game_id):
   game = database.execute("SELECT * FROM Game WHERE GameID = %s", (game_id,)).fetchone()
-  form = forms.GameForm(request.form, name=game['GameName'], genre=game['Genre'], review=game['Review'], starrating=game['StarRating'], classification=game['ClassificationRating'], platformnotes=game['PlatformNotes'], cost=game['Cost'])
+  form = forms.GameForm(request.form, game_name=game['GameName'], genre=game['Genre'], review=game['Review'], star_rating=game['StarRating'], classification_rating=game['ClassificationRating'], platform_notes=game['PlatformNotes'], cost=game['Cost'])
   if request.method == "POST" and form.validate():
-    database.execute("UPDATE Game SET GameName = %s, Genre = %s, Review = %s,  StarRating = %s, ClassificationRating = %s, PlatformNotes = %s, Cost = %s WHERE GameID = %s", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, form.platform_notes.data, form.cost.data, game['GameID']))
+    database.execute("UPDATE Game SET GameName = %s, Genre = %s, Review = %s,  StarRating = %s, ClassificationRating = %s, PlatformNotes = %s, Cost = %s WHERE GameID = %s;", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, ' '.join(form.platform_notes.data), form.cost.data, game['GameID']))
     database.commit()
     flash("You have updated the video successfully!", 'notice')
     return redirect(url_for('games'))
   else:
-    return render_template('games/edit.html', form=form, video=video)
+    return render_template('games/edit.html', form=form, game=game)
 
 @app.route("/videos/<video_id>/add_to_basket", methods=['POST'])
 @viewer_login_required

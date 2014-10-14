@@ -3,12 +3,12 @@
 <a href="{{ url_for('instance_runs') }}"><< Back to All Instance Runs</a>
 <h1>New Instance Run</h1>
 {% call macros.render_form(instance_run_form, action_url=url_for('instance_runs_create'), action_text='Create Instance Run') %}
-<div class="row"><div class="col-sm-3">
+<div class="row"><div class="col-xs-3">
   {{ macros.render_field(instance_run_form.supervisor_id) }}
 </div></div>
 {{ macros.render_field(instance_run_form.name) }}
 {{ macros.render_field(instance_run_form.recorded_time, placeholder="Format: %Y-%m-%d %H:%M:%S") }}
-<div class="row"><div class="col-sm-3">
+<div class="row"><div class="col-xs-3">
   {{ macros.render_field(instance_run_form.category_name) }}
 </div></div>
 {% endcall %}

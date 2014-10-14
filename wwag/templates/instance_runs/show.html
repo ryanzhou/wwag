@@ -29,7 +29,7 @@
 {% if  g.get('current_player') and instance_run['PlayerID'] == g.current_player.get('PlayerID') %}
 {% call macros.render_form(add_player_form, action_url=url_for('instance_runs_create_player', instance_run_id=instance_run['InstanceRunID']), action_text='Add Player') %}
 <div class="row">
-<div class="col-sm-3">
+<div class="col-xs-3">
   {{ macros.render_field(add_player_form.player_id) }}
 </div>
 </div>

@@ -3,10 +3,10 @@
 <a href="{{ url_for('videos') }}"><< Back to All Videos</a>
 <h1>{{ video['VideoName'] }}</h1>
 <div class="row">
-  <div class="col-sm-8 center">
+  <div class="col-xs-8 center">
     <iframe width="90%" height="500" src="{{ video['URL'] }}" frameborder="0" allowfullscreen></iframe>
   </div>
-  <div class="col-sm-4">
+  <div class="col-xs-4">
     <h3>Instance Run</h3>
     <p>This video is recorded as part of the instance run <a href="{{ url_for('instance_runs_show', instance_run_id=video['InstanceRunID']) }}">{{ video['Name'] }}</a> for the game <a href="{{ url_for('games', game_id=video['GameID']) }}">{{ video['GameName']}}</a>.</p>
     <h3>Meta</h3>

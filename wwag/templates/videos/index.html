@@ -5,14 +5,14 @@
   {% for video in videos %}
   <a href="{{ url_for('videos_show', video_id=video['VideoID']) }}" class="list-group-item">
     <div class="row">
-      <div class="col-sm-2">
+      <div class="col-xs-2">
         <img src="{{ video['URL'] | youtube_thumbnail_url }}" width="120" height="90" />
       </div>
-      <div class="col-sm-8">
+      <div class="col-xs-8">
         <h3 style="margin-top: 10px">{{ video['VideoName'] }}</h3>
         <p>Uploaded on {{ video['CreatedAt'] | date }} for instance run <strong>{{ video['Name'] }}</strong>. This video has been viewed {{ video['ViewCount'] }} times.</p>
       </div>
-      <div class="col-sm-2 right">
+      <div class="col-xs-2 right">
         <div style="font-size: 24px">
           {% if video['Price'] > 0 %}
           ${{ video['Price'] }}

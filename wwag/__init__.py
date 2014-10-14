@@ -10,3 +10,4 @@ app.config.from_object('config')
 import wwag.database
 import wwag.views
 import wwag.context_processors
+import wwag.filters

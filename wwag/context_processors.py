@@ -3,8 +3,8 @@ from wwag import app, database
 
 @app.context_processor
 def templating_processor():
-  def button_to(url, text):
-    return "<form action='%s' method='POST'><input type='submit' value='%s' class='btn btn-sm btn-primary'></input></form>" % (url, text)
+  def button_to(url, text, classes="btn-sm btn-primary"):
+    return "<form action='%s' method='POST'><input type='submit' value='%s' class='btn %s'></input></form>" % (url, text, classes)
   return dict(button_to=button_to)
 
 @app.context_processor

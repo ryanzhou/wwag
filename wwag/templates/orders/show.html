@@ -1,7 +1,9 @@
 {% extends "index.html" %}
 {% block content %}
-<h1>Order #{{ order['ViewerOrderID'] }}</h1>
+<h1>Order #{{ order['ViewerOrderID'] }} <small><span class="label label-default">{{ order['ViewedStatus'] }}</span></small></h1>
 
+{% if order_lines | length %}
+<h3>Your Order Items</h3>
 <table class="table">
   <thead>
     <th>Video Item</th>
@@ -29,10 +31,18 @@
     </tr>
   </tbody>
 </table>
+{% else %}
+<div class="well well-lg">
+  <h3>Your basket is empty</h3>
+  <p>Browser our video collection for your favourite instance runs.</p>
+  <p><a href="{{ url_for('videos') }}" class="btn btn-primary">Browser videos</a></p>
+</div>
+{% endif %}
 
-{% if order['ViewedStatus'] == "OPEN" %}
-<h3>Checkout</h3>
-<p>Pay now to instantly access these videos.</p>
-<p>{{ button_to(url_for('basket_checkout'), "Pay $%s now" % (order_total)) | safe }}</p>
+{% if order['ViewedStatus'] == "OPEN" and order_total > 0 %}
+<div class="well well-lg right">
+<p>Instantly access this order for ${{ order_total }}</p>
+<p>{{ button_to(url_for('basket_checkout'), "Checkout", "btn-primary") | safe }}</p>
+</div>
 {% endif %}
 {% endblock %}

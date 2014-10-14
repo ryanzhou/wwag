@@ -20,13 +20,13 @@ def before_request():
 
 def open_order():
   viewer_id = g.current_viewer['ViewerID']
-  open_order = database.execute("SELECT * FROM ViewerOrder WHERE ViewerID = %s AND ViewedStatus = 'OPEN';", (viewer_id,)).fetchone()
+  open_order = database.execute("SELECT * FROM ViewerOrder WHERE ViewerID = %s AND ViewedStatus = 'Open';", (viewer_id,)).fetchone()
   if open_order:
     return open_order
   else:
-    lastrowid = database.execute("INSERT INTO ViewerOrder (OrderDate, ViewedStatus, ViewerID) VALUES (%s, %s, %s);", (datetime.now().date(), "OPEN", viewer_id)).lastrowid
+    lastrowid = database.execute("INSERT INTO ViewerOrder (OrderDate, ViewedStatus, ViewerID) VALUES (%s, %s, %s);", (datetime.now().date(), "Open", viewer_id)).lastrowid
     database.commit()
-    return database.execute("SELECT * FROM ViewerOrder WHERE ViewerID = %s AND ViewedStatus = 'OPEN';", (viewer_id,)).fetchone()
+    return database.execute("SELECT * FROM ViewerOrder WHERE ViewerID = %s AND ViewedStatus = 'Open';", (viewer_id,)).fetchone()
 
 @app.route("/")
 def index():
@@ -177,7 +177,6 @@ def viewers_register():
   else:
     return render_template('viewers/new.html', form=form)
 
-
 @app.route("/videos")
 def videos():
   videos = database.execute("SELECT * FROM Video NATURAL JOIN InstanceRun ORDER BY ViewCount DESC;").fetchall()
@@ -185,8 +184,21 @@ def videos():
 
 @app.route("/videos/<video_id>")
 def videos_show(video_id):
-  video = database.execute("SELECT * FROM Video NATURAL JOIN InstanceRun WHERE VideoID = %s", (video_id,)).fetchone()
-  return render_template('videos/show.html', video=video)
+  database.execute("UPDATE Video SET ViewCount = ViewCount+1 WHERE VideoID = %s;", (video_id,))
+  database.commit()
+  video = database.execute("SELECT * FROM Video NATURAL JOIN InstanceRun NATURAL JOIN Game WHERE VideoID = %s", (video_id,)).fetchone()
+  if video['Price'] > 0 and not g.get('current_player'):
+    if not g.get('current_viewer'):
+      return redirect(url_for('users_login', error="You must sign in as a Viewer to access this page."))
+    order_line = database.execute("SELECT * FROM ViewerOrderLine NATURAL JOIN ViewerOrder WHERE VideoID = %s AND ViewerID = %s AND ViewedStatus IN ('Pending', 'Viewed') LIMIT 1;", (video['VideoID'], g.current_viewer['ViewerID'])).fetchone()
+    if order_line:
+      database.execute("UPDATE ViewerOrder SET ViewedStatus = 'Viewed' WHERE ViewerOrderID = %s;",(order_line['ViewerOrderID'],))
+      database.commit()
+      return render_template('videos/show.html', video=video, order_line=order_line)
+    else:
+      return render_template('videos/purchase.html', video=video)
+  else:
+    return render_template('videos/show.html', video=video)
 
 @app.route("/videos/create", methods=['GET', 'POST'])
 @player_login_required
@@ -216,8 +228,12 @@ def videos_update(video_id):
 @app.route("/videos/<video_id>/delete", methods=['POST'])
 @player_login_required
 def videos_delete(video_id):
-  database.execute("DELETE FROM Video WHERE VideoID = %s", (video_id,))
-  database.commit()
+  try:
+    database.execute("DELETE FROM Video WHERE VideoID = %s", (video_id,))
+    database.commit()
+  except IntegrityError as e:
+    flash("You cannot delete this video because some viewers have ordered it!", 'error')
+    return redirect(url_for('videos_show', video_id=video_id))
   flash("You have deleted the video.", 'notice')
   return redirect(url_for('videos'))
 

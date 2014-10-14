@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% block content %}
+<a href="{{ url_for('videos') }}"><< Back to All Videos</a>
+
+<h1>{{ video['VideoName'] }}</h1>
+
+<div class="well well-lg">
+  <h3>Purchase this Video for <strong>${{ video['Price'] }}</strong></h3>
+  <p>This is a premium video. You need to purchase it first to watch it.</p>
+  <p>{{ button_to(url_for('videos_add_to_basket', video_id=video['VideoID']), "Add to Basket", "btn-primary") | safe }}</p>
+</div>
+
+<h3>Instance Run</h3>
+<p>This video is recorded as part of the instance run <a href="{{ url_for('instance_runs_show', instance_run_id=video['InstanceRunID']) }}">{{ video['Name'] }}</a></p>
+{% endblock %}

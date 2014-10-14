@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
       <a class="navbar-brand" href="{{ url_for('index') }}">WWAG</a>
@@ -16,9 +16,9 @@
         <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
         {% elif g.current_viewer %}
         {% if g.open_order %}
-        <li><a href="{{ url_for('orders_show', order_id=g.open_order['ViewerOrderID']) }}">Basket <span class="label label-info">{{ open_order_items_count }}</span></a></li>
+        <li><a href="{{ url_for('orders_show', order_id=g.open_order['ViewerOrderID']) }}">Basket <span class="badge">{{ open_order_items_count }}</span></a></li>
         {% endif %}
-        <li><a><small>{{ g.current_viewer['Email'] }}</small></a></li>
+        <li><a>{{ g.current_viewer['Email'] }}</a></li>
         <li><a href="{{ url_for('users_logout') }}">Sign Out</a></li>
         {% else %}
         <li><a href="{{ url_for('users_login') }}">Sign In</a></li>

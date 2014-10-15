@@ -2,42 +2,36 @@ from wtforms import Form, BooleanField, StringField, PasswordField, SelectField,
 from wwag import app, database
 
 def all_players():
-  with app.app_context():
-    try:
-      players = database.execute("SELECT PlayerID, FirstName, LastName FROM Player").fetchall()
-      return [(p['PlayerID'], "%s %s" % (p['FirstName'],p["LastName"])) for p in players]
-    except:
-      return []
+  players = database.execute("SELECT PlayerID, FirstName, LastName FROM Player;").fetchall()
+  return [(p['PlayerID'], "%s %s" % (p['FirstName'],p["LastName"])) for p in players]
 
 def all_instance_runs():
-  with app.app_context():
-    try:
-      instance_runs = database.execute("SELECT InstanceRunID, Name FROM InstanceRun").fetchall()
-      return [(i['InstanceRunID'], i['Name']) for i in instance_runs]
-    except:
-      return []
+  instance_runs = database.execute("SELECT InstanceRunID, Name FROM InstanceRun;").fetchall()
+  return [(i['InstanceRunID'], i['Name']) for i in instance_runs]
 
 def all_games():
-  with app.app_context():
-    try:
-      games = database.execute("SELECT GameID, Genre FROM Game").fetchall()
-      return [(g['GameID'], g['Genre']) for g in games]
-    except:
-      return []
+  games = database.execute("SELECT GameID, GameName FROM Game;").fetchall()
+  return [(g['GameID'], g['GameName']) for g in games]
 
 class LoginForm(Form):
   email = StringField('Email', [validators.Email()])
   password = PasswordField('Password', [validators.Length(min=6, max=128)])
 
 class InstanceRunForm(Form):
-  supervisor_id = SelectField('Supervisor', coerce=int, choices=all_players())
+  supervisor_id = SelectField('Supervisor', coerce=int)
   name = StringField('Name', [validators.Length(min=3, max=45)])
   recorded_time = DateTimeField('Recorded Time')
   category_name = SelectField('Category', choices=[(c, c) for c in ["Just for Fun", "Achievement Attempt", "Role Playing", "Team Challenge"]])
 
+  def set_choices(self):
+    self.supervisor_id.choices = all_players()
+
 class AddInstanceRunPlayerForm(Form):
-  player_id = SelectField('Player', coerce=int, choices=all_players())
+  player_id = SelectField('Player', coerce=int)
   performance_notes = TextAreaField('Performance Notes', [validators.optional(), validators.length(max=200)])
+
+  def set_choices(self):
+    self.player_id.choices = all_players()
 
 class ViewerRegistrationForm(Form):
   email = StringField('Email', [validators.Email()])
@@ -47,11 +41,15 @@ class ViewerRegistrationForm(Form):
 
 class VideoForm(Form):
   name = StringField('Video Name', [validators.Length(min=3, max=50)])
-  instance_run_id = SelectField('Instance Run', coerce=int, choices=all_instance_runs())
-  game_id = SelectField('Game', coerce=int, choices=all_games())
+  instance_run_id = SelectField('Instance Run', coerce=int)
+  game_id = SelectField('Game', coerce=int)
   price = DecimalField('Price')
   url = StringField('URL', [validators.URL()])
   video_type = SelectField('Type', choices=[(c, c) for c in ["Just for Fun", "Achievement Attempt", "Role Playing", "Team Challenge"]])
+
+  def set_choices(self):
+    self.game_id.choices = all_games()
+    self.instance_run_id.choices = all_instance_runs()
 
 class GameForm(Form):
   game_name = StringField('Game Name', [validators.Length(min=3, max=50)])

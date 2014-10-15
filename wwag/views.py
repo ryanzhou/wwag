@@ -110,18 +110,21 @@ def instance_runs_show(instance_run_id):
   instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s;", (instance_run_id,)).fetchone()
   instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s;", (instance_run_id,)).fetchall()
   add_player_form = forms.AddInstanceRunPlayerForm()
+  add_player_form.set_choices()
   return render_template('instance_runs/show.html', instance_run=instance_run, instance_run_players=instance_run_players, add_player_form=add_player_form)
 
 @app.route("/instance_runs/new")
 @player_login_required
 def instance_runs_new():
   instance_run_form = forms.InstanceRunForm()
+  instance_run_form.set_choices()
   return render_template('instance_runs/new.html', instance_run_form=instance_run_form)
 
 @app.route("/instance_runs/create", methods=['POST'])
 @player_login_required
 def instance_runs_create():
   instance_run_form = forms.InstanceRunForm(request.form)
+  instance_run_form.set_choices()
   if instance_run_form.validate():
     lastrowid = database.execute("INSERT INTO InstanceRun (SupervisorID, Name, RecordedTime, CategoryName) VALUES (%s, %s, %s, %s);", (instance_run_form.supervisor_id.data, instance_run_form.name.data, instance_run_form.recorded_time.data, instance_run_form.category_name.data)).lastrowid
     database.commit()
@@ -136,6 +139,7 @@ def instance_runs_create_player(instance_run_id):
   instance_run = database.execute("SELECT * FROM InstanceRun INNER JOIN Player ON InstanceRun.SupervisorID = Player.PlayerID WHERE InstanceRunID = %s;", (instance_run_id,)).fetchone()
   instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s;", (instance_run_id,)).fetchall()
   add_player_form = forms.AddInstanceRunPlayerForm(request.form)
+  add_player_form.set_choices()
   if g.current_player['PlayerID'] == instance_run['PlayerID']:
     if add_player_form.validate():
       try:
@@ -204,6 +208,7 @@ def videos_show(video_id):
 @player_login_required
 def videos_create():
   form = forms.VideoForm(request.form)
+  form.set_choices()
   if request.method == "POST" and form.validate():
     lastrowid = database.execute("INSERT INTO Video (VideoName, InstanceRunID, GameID, Price, URL, VideoType, CreatedAt) VALUES (%s, %s, %s, %s, %s, %s, %s);", (form.name.data, form.instance_run_id.data, form.game_id.data, form.price.data, form.url.data, form.video_type.data, datetime.now())).lastrowid
     database.commit()

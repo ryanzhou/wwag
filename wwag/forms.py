@@ -61,3 +61,7 @@ class GameForm(Form):
   classification_rating = SelectField ('ClassificationRating', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
   platform_notes = SelectMultipleField('PlatformNotes', choices=[(c, c) for c in ["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
   cost = DecimalField('Cost', [validators.DataRequired()])
+
+class AchievementForm(Form):
+  achievement_name = StringField('Name', [validators.Length(min=3, max=50)])
+  reward_body = SelectField('RewardBody', choices=[(c,c) for c in [ "Microsoft", "Apple", "Blizzard", "made-up by WWAG"]])

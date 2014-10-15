@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Update Achievement</h1>
+{{ macros.render_form(form) }}
+<space>
+<h3>Delete this Achievement</h3>
+<p>Are you sure? This is irreversible.</p>
+<p>{{ button_to(url_for('instance_runs_achievements_delete', instance_run_id=instance_run_id, achievement_id=achievement_id), "Delete Achievement") | safe}}</p>
+{% endblock %}

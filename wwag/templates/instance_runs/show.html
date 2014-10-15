@@ -2,39 +2,61 @@
 {% block content %}
 <a href="{{ url_for('instance_runs') }}"><< Back to All Instance Runs</a>
 <h1>Instance Run #{{ instance_run['InstanceRunID'] }} <small><span class="label label-primary">{{ instance_run['CategoryName'] }}</span> {{ instance_run['Name'] }}</small></h1>
-
-<h3>Supervision</h3>
-<p>This instance run was supervised by <a href="{{ url_for('players_show', player_id=instance_run['PlayerID']) }}">{{ instance_run['FirstName'] }} {{ instance_run['LastName'] }}</a> and recorded at {{ instance_run['RecordedTime'] }}.</p>
-<space>
-<h3>Players</h3>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Player</th>
-      <th>Performance Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for instance_run_player in instance_run_players %}
-    <tr>
-      <td><a href="{{ url_for('players_show', player_id=instance_run_player['PlayerID']) }}">{{ instance_run_player['FirstName'] }} {{ instance_run_player['LastName'] }}</td>
-      <td>{{ instance_run_player['PerformanceNotes'] }}</td>
-    </tr>
+<div class="row">
+  <div class="col-xs-8">
+    <h3>Supervision</h3>
+    <p>This instance run was supervised by <a href="{{ url_for('players_show', player_id=instance_run['PlayerID']) }}">{{ instance_run['FirstName'] }} {{ instance_run['LastName'] }}</a> and recorded at {{ instance_run['RecordedTime'] }}.</p>
+    <space>
+    <h3>Players</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Performance Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for instance_run_player in instance_run_players %}
+        <tr>
+          <td><a href="{{ url_for('players_show', player_id=instance_run_player['PlayerID']) }}">{{ instance_run_player['FirstName'] }} {{ instance_run_player['LastName'] }}</td>
+          <td>{{ instance_run_player['PerformanceNotes'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-xs-4">
+    <h3>Achievements</h3>
+    {% for achievement in achievements %}
+    <ul>
+      <li><b>Achievement Name</b> {{achievement['Name']}}</li>
+      <li><b>Achievement Time</b> {{achievement['WhenAchieved']}}</li>
+      <li><b>Achievement Reward Body</b> {{achievement['RewardBody']}}</li>
+    </ul>
+    <a href="{{ url_for('instance_runs_achievements_update', instance_run_id=instance_run['InstanceRunID'], achievement_id=achievement['AchievementID'])}}">Edit</a>
     {% endfor %}
-  </tbody>
-</table>
+  </div>
+</div>
 <space>
 
 <h3>Add Player</h3>
 {% if  g.get('current_player') and instance_run['PlayerID'] == g.current_player.get('PlayerID') %}
 {% call macros.render_form(add_player_form, action_url=url_for('instance_runs_create_player', instance_run_id=instance_run['InstanceRunID']), action_text='Add Player') %}
 <div class="row">
-<div class="col-sm-3">
+<div class="col-xs-3">
   {{ macros.render_field(add_player_form.player_id) }}
 </div>
 </div>
   {{ macros.render_field(add_player_form.performance_notes, rows=3, placeholder="Maximum length: 300 characters.") }}
 {% endcall %}
+{% else %}
+<p>You can't manage this instance run because you're not the supervisor.</p>
+{% endif %}
+
+<space>
+<h3>Add Achievement</h3>
+{% if  g.get('current_player') and instance_run['PlayerID'] == g.current_player.get('PlayerID') %}
+{{ macros.render_form(achievement_form, action_url=url_for('instance_runs_achievements_create', instance_run_id=instance_run['InstanceRunID'])) }}
 {% else %}
 <p>You can't manage this instance run because you're not the supervisor.</p>
 {% endif %}

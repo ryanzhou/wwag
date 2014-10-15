@@ -55,11 +55,11 @@ class GameForm(Form):
   game_name = StringField('Game Name', [validators.Length(min=3, max=50)])
   genre = SelectField('Genre', choices=[(c, c) for c in ['Action', 'Adventure', 'Role-playing', 'Simulation', 'Sports']])
   review = StringField('Review', [validators.Length(min=3, max=50)])
-  star_rating = DecimalField('StarRating', [validators.DataRequired()])
-  classification_rating = SelectField ('ClassificationRating', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
-  platform_notes = SelectMultipleField('PlatformNotes', choices=[(c, c) for c in ["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
+  star_rating = DecimalField('Star Rating', [validators.DataRequired()])
+  classification_rating = SelectField ('Classification Rating', choices=[(c, c) for c in ["PG", "M", "CTC", "G"]])
+  platform_notes = SelectMultipleField('Platform Notes', choices=[(c, c) for c in ["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
   cost = DecimalField('Cost', [validators.DataRequired()])
 
 class AchievementForm(Form):
   achievement_name = StringField('Name', [validators.Length(min=3, max=50)])
-  reward_body = SelectField('RewardBody', choices=[(c,c) for c in [ "Microsoft", "Apple", "Blizzard", "made-up by WWAG"]])
+  reward_body = SelectField('Reward Body', choices=[(c,c) for c in [ "Microsoft", "Apple", "Blizzard", "WWAG"]])

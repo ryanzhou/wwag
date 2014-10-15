@@ -224,6 +224,7 @@ def videos_create():
 def videos_update(video_id):
   video = database.execute("SELECT * FROM Video WHERE VideoID = %s", (video_id,)).fetchone()
   form = forms.VideoForm(request.form, name=video['VideoName'], instance_run_id=video['InstanceRunID'], game_id=video['GameID'], price=video['Price'], url=video['URL'], video_type=video['VideoType'])
+  form.set_choices()
   if request.method == "POST" and form.validate():
     database.execute("UPDATE Video SET VideoName = %s, InstanceRunID = %s, GameID = %s, Price = %s, URL = %s, VideoType = %s WHERE VideoID = %s", (form.name.data, form.instance_run_id.data, form.game_id.data, form.price.data, form.url.data, form.video_type.data, video['VideoID']))
     database.commit()

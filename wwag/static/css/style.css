@@ -7,6 +7,10 @@ body {
   background: #FFF;
 }
 
+.container {
+  width: 970px !important;
+}
+
 .navbar {
   font-weight: 300;
   font-size: 16px;

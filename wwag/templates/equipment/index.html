@@ -1,18 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Equipement</h1>
+<h1>Equipment Management</h1>
 <table class="table">
   <thead>
     <th>Equipment Mode and Make</th>
     <th>Review</th>
     <th>Processor Speed</th>
+    <th>Manage</th>
   </thead>
   <tbody>
-    {% for equipment in equipments %}
+    {% for e in equipment %}
     <tr>
-      <td><a href="{{ url_for('equipment') }}">{{ Equipment }}</a></td>
-      <td>{{ equipment['Review'] }}</td>
-      <td>{{ equipment['ProcessorSpeed'] }}</td>
+      <td>{{ e['ModelAndMake'] }}</td>
+      <td>{{ e['EquipmentReview'] }}</td>
+      <td>{{ e['ProcessorSpeed'] }}</td>
+      <td>
+        <a href="{{ url_for('equipment_update', equipment_id=e['EquipmentID']) }}">Edit</a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>

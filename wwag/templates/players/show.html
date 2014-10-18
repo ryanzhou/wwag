@@ -1,5 +1,60 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>{{ player['FirstName'] }} {{ player['LastName'] }}</h1>
+<div class="row">
+  <div class="col-xs-6">
+    <h3>Basic Information</h3>
+    <space>
+    <table class="table table-bordered">
+      <tr>
+        <td>Full name</td>
+        <td>{{ player['FirstName'] }} {{ player['LastName'] }}</td>
+      </tr>
+      <tr>
+        <td>Supervised by</td>
+        <td><a href="{{ url_for('players_show', player_id=supervisor['PlayerID']) }}">{{ supervisor['FirstName'] }} {{ supervisor['LastName'] }}</a></td>
+      </tr>
+      <tr>
+        <td>Profile Description</td>
+        <td>{{ player['ProfileDescription'] }}</td>
+      </tr>
+      <tr>
+        <td>Role</td>
+        <td>{{ player['Role'] }}</td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>{{ player['Email'] }}</td>
+      </tr>
+      <tr>
+        <td>Game Handle</td>
+        <td>{{ player['GameHandle'] }}</td>
+      </tr>
+      <tr>
+        <td>VoIP</td>
+        <td>{{ player['VoIP'] }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-xs-6">
+    <h3>Appears in <small>(Instance Runs)</small></h3>
+    <space>
+    <div class="list-group">
+      {% for instance_run in instance_runs %}
+      <a href="{{ url_for('instance_runs_show', instance_run_id=instance_run['InstanceRunID']) }}" class="list-group-item">
+        <h4>{{ instance_run['Name'] }}</h4>
+        <p>{{ instance_run['RecordedTime'] | date }} <span class="label label-primary">{{ instance_run['CategoryName'] }}</span> </p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<space>
+<h3>Manage this Player</h3>
+{% if g.current_staff or g.current_player['PlayerID'] == player['PlayerID'] %}
+<p><a href="{{ url_for('players_update', player_id=player['PlayerID']) }}">Edit this Player</a></p>
+{% else %}
+<p>You don't have the permission to edit this player.</p>
+{% endif %}
 
 {% endblock %}

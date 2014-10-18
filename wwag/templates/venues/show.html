@@ -1,12 +1,52 @@
 {% extends "index.html" %}
 {% block content %}
-<h1>Venue Name: {{venue['Name']}}</h1>
-<ul>
-  <li><b>VenueID:</b> {{venue['VenueID']}}</li>
-  <li><b>Description:</b> {{venue['VenueDescription']}}</li>
-  <li><b>Power Outlets:</b> {{venue['PowerOutlets']}}</li>
-  <li><b>Lighting:</b> {{venue['LightingNotes']}}</li>
-  <li><b>Supervisor:</b> {{venue['SupervisorID']}}</li>
-</ul>
-<ul><a href="{{ url_for('venues') }}">Return to All Venues</a></ul>
+<a href="{{ url_for('venues') }}"><< Back to All Venues</a>
+<h1>Venue - {{venue['Name']}}</h1>
+<h3>Description</h3>
+<p>{{ venue['VenueDescription'] }}</p>
+<space>
+<h3>Useful Information</h3>
+<table class="table table-bordered" style="margin-top: 20px; width: 50%">
+  <tr>
+    <td>Supervisor</td><td><a href="{{ url_for('players_show', player_id=venue['SupervisorID'])}}">{{ venue['FirstName'] }} {{ venue['LastName'] }}</a></td>
+  </tr>
+  <tr>
+    <td>Current Year Equipment</td><td>{{ equipment['ModelAndMake'] }}</td>
+  </tr>
+  <tr>
+    <td>Power Outlets</td><td>{{ venue['PowerOutlets'] }}</td>
+  </tr>
+  <tr>
+    <td>Lighting Notes</td><td>{{ venue['LightingNotes'] }}</td>
+  </tr>
+  <tr>
+    <td>Supervisor</td><td>{{ venue['SupervisorID'] }}</td>
+  </tr>
+</table>
+<space>
+<h3>Repurpose this Venue</h3>
+{% if g.current_staff or g.current_player['PlayerID'] == venue['SupervisorID'] %}
+{% call macros.render_form(form, action_url=url_for("venues_equipment_create", venue_id=venue['VenueID']), action_text="Repurpose Venue") %}
+<div class="row"><div class="col-xs-3">
+  {{ macros.render_field(form.equipment_id)}}
+</div></div>
+<div class="row"><div class="col-xs-3">
+  {{ macros.render_field(form.financial_year_starting_date, placeholder="e.g. 2014-07-01") }}
+</div></div>
+<div class="row"><div class="col-xs-5">
+  {{ macros.render_field(form.software_version)}}
+</div></div>
+{% endcall %}
+{% else %}
+<p>Only staff members and the supervisor of this venue can manage this venue.</p>
+{% endif %}
+
+<space>
+<h3>Manage Venue</h3>
+{% if g.current_staff or g.current_player['PlayerID'] == venue['SupervisorID'] %}
+<p>Edit or delete this venue:</p>
+<p><a href="{{ url_for('venues_update', venue_id=venue['VenueID']) }}">Update this Venue</a></p>
+{% else %}
+<p>Only staff members and the supervisor of this venue can manage this venue.</p>
+{% endif %}
 {% endblock %}

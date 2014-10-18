@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Update Player - {{ player['FirstName'] }} {{ player['LastName']}}</h1>
+<p>Leave passwords blank if you don't want to change it.</p>
+<space>
+{{ macros.render_form(form, action_text="Update Player") }}
+{% endblock %}

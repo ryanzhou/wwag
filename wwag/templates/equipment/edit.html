@@ -2,4 +2,8 @@
 {% block content %}
 <h1>Edit Equipment - {{ equipment['EquipmentID'] }}</h1>
 {{ macros.render_form(form, action_text="Update Equipment") }}
+<space>
+<h3>Delete this Equipment</h3>
+<p>Are you sure? This action cannot be undone.</p>
+{{ button_to(url_for('equipment_delete', equipment_id=equipment['EquipmentID']), "Delete this equipment", "btn-sm btn-danger") | safe }}
 {% endblock %}

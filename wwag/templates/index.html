@@ -1,22 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-{% if g.current_viewer %}
-<h2>Welcome back {{ g.current_viewer['Email'] }}!</h2>
-<p>As a registered viewer, you can place orders for premium videos on WWAG.</p>
-<p>
-  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">Browse Videos</a>
-  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">My Past Purchases</a>
-</p>
-<hr>
-<p>Please ensure that your details are up-to-date with us:</p>
-<p>
-  <a href="{{ url_for('users_update_address') }}" >Update My Address</a>
-</p>
-{% else %}
-<h2>Welcome to WWAG</h2>
-<p>WWAG is a diverse family of gamers. We publish new videos everyday and start instance runs regularly. To get started:</p>
-<p><a href="{{ url_for('users_login') }}" class="btn btn-primary btn-sm">Sign In</a> &nbsp; or &nbsp; <a href="{{ url_for('viewers_new') }}" class="btn btn-primary  btn-sm">Sign Up</a></p>
-{% endif %}
+{% include "partials/welcome.html"%}
 <hr>
 <div class="row">
   <div class="col-xs-8">
@@ -38,8 +22,22 @@
       </a>
       {% endfor %}
     </div>
+    <a href="{{ url_for('videos') }}">Browse All Videos</a>
+  </div>
+  <div class="col-xs-4">
+    <h3>Latest Instance Runs</h3>
+    <space>
+    <div class="list-group">
+      {% for instance_run in instance_runs %}
+      <a href="{{ url_for('instance_runs_show', instance_run_id=instance_run['InstanceRunID']) }}" class="list-group-item">
+        <h4>{{ instance_run['Name'] }}</h4>
+        <p>{{ instance_run['RecordedTime'] | date }} <span class="label label-primary">{{ instance_run['CategoryName'] }}</span> </p>
+      </a>
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('instance_runs') }}">Browse All Instance Runs</a>
+
   </div>
 </div>
-<a href="{{ url_for('videos') }}">Browse All Videos</a>
 
 {% endblock %}

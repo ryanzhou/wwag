@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, SelectMultipleField, validators, IntegerField
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, SelectMultipleField, validators, IntegerField, RadioField
 from wwag import app, database
 
 def all_players():
@@ -12,6 +12,10 @@ def all_instance_runs():
 def all_games():
   games = database.execute("SELECT GameID, GameName FROM Game;").fetchall()
   return [(g['GameID'], g['GameName']) for g in games]
+
+def all_equipment():
+  equipment = database.execute("SELECT EquipmentID, ModelAndMake FROM Equipment;").fetchall()
+  return [(e['EquipmentID'], e['ModelAndMake']) for e in equipment]
 
 class LoginForm(Form):
   email = StringField('Email', [validators.Email()])
@@ -66,18 +70,18 @@ class AchievementForm(Form):
 
 class VenueForm(Form):
   venue_name = StringField('Name', [validators.Length(min=3, max=50)])
-  description = StringField('VenueDescription', [validators.Length(min=2, max=50)])
-  power_outlets = IntegerField('PowerOutlets', [validators.DataRequired()])
-  light = StringField('LightingNotes', [validators.Length(min=3, max=50)])
+  description = TextAreaField('Venue Description', [validators.Length(min=2, max=65535)])
+  power_outlets = IntegerField('Power Outlets', [validators.DataRequired()])
+  light = TextAreaField('Lighting Notes', [validators.Length(min=3, max=65535)])
   supervisor_id = SelectField('Supervisor', coerce=int)
 
   def set_choices(self):
     self.supervisor_id.choices = all_players()
 
 class EquipmentForm(Form):
-  model = SelectField('ModelAndMake', choices=[(c, c) for c in["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
-  review = StringField('EquipmentReview', [validators.Length(min=3, max=50)])
-  speed = StringField('ProcessorSpeed', [validators.Length(min=0, max=50)])
+  model = SelectField('Model and Make', choices=[(c, c) for c in["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
+  review = StringField('Equipment Review', [validators.Length(min=3, max=50)])
+  speed = StringField('Processor Speed', [validators.Length(min=0, max=50)])
 
 class AddressForm(Form):
   street_number = StringField('Street Number', [validators.DataRequired()])
@@ -88,3 +92,28 @@ class AddressForm(Form):
   governing_district = StringField('State', [validators.DataRequired()])
   postal_area = StringField('Postcode', [validators.Length(min=2, max=8)])
   country = SelectField('Country', choices=[(c,c) for c in ["Australia", "Canada", "United States", "India", "Russia", "France", "Germany", "China", "Indonesia", "Japan", "United Kingdom", "South Korea"]])
+
+class PlayerForm(Form):
+  email = StringField('Email', [validators.Length(min=3, max=50)])
+  password = PasswordField('Password', [validators.Length(min=6, max=128), validators.EqualTo('password_confirmation', message='Passwords must match'), validators.Optional()])
+  password_confirmation = PasswordField('Password Confirmation')
+  supervisor_id = SelectField('Supervisor', coerce=int)
+  first_name = StringField('First Name', [validators.Length(min=3, max=50)])
+  last_name = StringField('Last Name', [validators.Length(min=3, max=50)])
+  role = SelectField('Role', choices=[(c, c) for c in ['Master User', 'Supervisor', 'Player']])
+  type = SelectField('Type', choices=[('P', 'Regular Player'), ('S', 'Staff Member')])
+  profile_description = TextAreaField('Profile Description', [validators.Length(min=3, max=65535)])
+  game_handle = StringField('Game Handle', [validators.Length(min=3, max=50)])
+  phone = StringField('Phone', [validators.Length(min=3, max=14)])
+  voip = StringField('VoIP', [validators.Length(min=3, max=30)])
+
+  def set_choices(self):
+    self.supervisor_id.choices = all_players()
+
+class VenueEquipmentForm(Form):
+  equipment_id = SelectField('Equipment', coerce=int)
+  financial_year_starting_date = DateField('Financial Year Starting Date', [validators.DataRequired()])
+  software_version = StringField('Software Version', [validators.DataRequired()])
+
+  def set_choices(self):
+    self.equipment_id.choices = all_equipment()

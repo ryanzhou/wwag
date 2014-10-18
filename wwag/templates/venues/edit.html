@@ -1,5 +1,9 @@
 {% extends "index.html" %}
 {% block content %}
-<h1>Edit Venue - {{ venue['Name'] }}</h1>
+<h1>Update Venue - {{ venue['Name'] }}</h1>
 {{ macros.render_form(form, action_text="Update Venue") }}
+<space>
+<h3>Delete this Venue</h3>
+<p>Are you sure? This action cannot be undone.</p>
+{{ button_to(url_for('venues_delete', venue_id=venue['VenueID']), "Delete Venue", "btn-sm btn-danger") | safe }}
 {% endblock %}

@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  padding-top: 100px;
+  padding-top: 80px;
 }
 
 .container {
@@ -12,7 +12,7 @@ body {
 
 .content {
   width: 1040px;
-  padding: 40px 0px;
+  padding: 20px 0px;
   margin: auto;
   background: #FFF;
 }
@@ -44,7 +44,7 @@ space {
   margin-top: 120px;
   padding: 40px;
   opacity: 0.9;
-  background: #FFF;
+  background: #eee;
 }
 
 .right {

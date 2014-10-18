@@ -23,7 +23,7 @@ def instance_runs_show(instance_run_id):
 @app.route("/instance_runs/new")
 @player_login_required
 def instance_runs_new():
-  instance_run_form = forms.InstanceRunForm()
+  instance_run_form = forms.InstanceRunForm(recorded_time=datetime.now())
   instance_run_form.set_choices()
   return render_template('instance_runs/new.html', instance_run_form=instance_run_form)
 

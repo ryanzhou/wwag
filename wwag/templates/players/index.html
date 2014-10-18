@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Our Players</h1>
+<table class="table">
+  <thead>
+    <th>Player Name</th>
+    <th>Game Handle</th>
+    <th>Email</th>
+  </thead>
+  <tbody>
+    {% for player in players %}
+    <tr>
+      <td><a href="{{ url_for('players_show', player_id=player['PlayerID'])}}">{{ player['FirstName'] }} {{ player['LastName'] }}</a></td>
+      <td>{{ player['GameHandle'] }}</td>
+      <td>{{ player['Email'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<space>
+<h3>Manage Players</h3>
+{% if g.current_staff %}
+<p>To manage an existing player, visit the player profile page and use the update link.</p>
+<p><a href="{{ url_for('players_create') }}">Add a Player</a></p>
+{% else %}
+<p>You must be signed in as a staff member to manage players.</p>
+{% endif %}
+{% endblock %}

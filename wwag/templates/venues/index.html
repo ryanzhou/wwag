@@ -1,19 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>Available Venues</h1>
-<table class="table">
+<table class="table table">
   <thead>
     <th>Venue Name</th>
-    <th>Venue Description</th>
+    <th>Supervisor</th>
   </thead>
   <tbody>
     {% for venue in venues %}
     <tr>
       <td><a href="{{ url_for('venues_show', venue_id=venue['VenueID']) }}">{{ venue['Name'] }}</a></td>
-      <td>{{ venue['VenueDescription'] }}</td>
+      <td><a href="{{ url_for('players_show', player_id=venue['SupervisorID']) }}">{{ venue['FirstName'] }} {{ venue['LastName'] }}</a></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-<a href="{{ url_for('venues_create', player_id=player_id) }}">Add a new Venue</a>
+
+<space>
+<h3>Manage Venues</h3>
+{% if g.current_staff %}
+<a href="{{ url_for('venues_create') }}">Add a new Venue</a>
+{% else %}
+<p>Only staff members can add new venues.</p>
+{% endif %}
 {% endblock %}

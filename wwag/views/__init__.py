@@ -9,6 +9,8 @@ def before_request():
   if session.get('user_type') == "Player":
     player = database.execute("SELECT * FROM Player WHERE PlayerID = %s;", (session.get('user_id'),)).fetchone()
     g.current_player = player
+    if player['Type'] == "S":
+      g.current_staff = player
   elif session.get('user_type') == "Viewer":
     viewer = database.execute("SELECT * FROM Viewer WHERE ViewerID = %s;", (session.get('user_id'),)).fetchone()
     if viewer:

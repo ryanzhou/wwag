@@ -1,0 +1,37 @@
+{% if g.current_viewer %}
+
+<h2>Welcome back {{ g.current_viewer['Email'] }}!</h2>
+<p>As a registered viewer, you can place orders for premium videos on WWAG.</p>
+<p>
+  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">Browse Videos</a>
+  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">My Past Purchases</a>
+</p>
+<hr>
+<p>Please ensure that your details are up-to-date with us:</p>
+<p>
+  <a href="{{ url_for('users_update_address') }}" >Update My Address</a>
+</p>
+
+{% elif g.current_staff %}
+
+<h2>Welcome back {{ g.current_staff['FirstName'] }}!</h2>
+<p>As one of the staff members of the company, you have access to the following additional maintenance features:</p>
+<p><a href="{{ url_for('equipment') }}">Manage Equipment</a> - <a href="#">Manage Orders</a></p>
+
+{% elif g.current_player %}
+
+<h2>Welcome back {{ g.current_player['FirstName'] }}!</h2>
+<p>You're a Player on WWAG. You automatically have access to all content on this website.</p>
+<hr>
+<p>Please ensure that your details are up-to-date with us:</p>
+<p>
+  <a href="{{ url_for('users_update_address') }}" >Update My Address</a>
+</p>
+
+{% else %}
+
+<h2>Welcome to WWAG</h2>
+<p>WWAG is a diverse family of gamers. We publish new videos everyday and start instance runs regularly. To get started:</p>
+<p><a href="{{ url_for('users_login') }}" class="btn btn-primary btn-sm">Sign In</a> &nbsp; or &nbsp; <a href="{{ url_for('viewers_new') }}" class="btn btn-primary  btn-sm">Sign Up</a></p>
+
+{% endif %}

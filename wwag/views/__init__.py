@@ -1,5 +1,6 @@
 from flask import render_template, request, flash, redirect, url_for, make_response, session, g
 from wwag import app, database
+from datetime import datetime
 
 @app.before_request
 def before_request():

@@ -348,3 +348,68 @@ def instance_runs_achievements_delete(instance_run_id, achievement_id):
   database.commit()
   flash("You have deleted the achievement.", 'notice')
   return redirect(url_for('instance_runs_show', instance_run_id=instance_run_id))
+
+@app.route("/venues")
+def venues():
+  venues = database.execute("SELECT * FROM Venue").fetchall()
+  return render_template('venues/index.html',venues=venues)
+
+@app.route("/venues/create", methods=['GET', 'POST'])
+@player_login_required
+def venues_create():
+  form = forms.VenueForm(request.form)
+  form.set_choices()
+  if request.method == "POST" and form.validate():
+    lastrowid = database.execute("INSERT INTO Venue (Name, VenueDescription, PowerOutlets, LightingNotes, SupervisorID) VALUES (%s, %s, %s, %s, %s);", (form.venue_name.data, form.description.data, form.power_outlets.data, form.light.data,  form.supervisor_id.data)).lastrowid
+    database.commit()
+    flash("You have successfully created a venue!", 'notice')
+    return redirect(url_for('venues'))
+  else:
+    return render_template('venues/new.html', form=form)
+
+@app.route("/venues/<venue_id>")
+def venues_show(venue_id):
+  venue = database.execute("SELECT * FROM Venue WHERE VenueID = %s", (venue_id,)).fetchone()
+  return render_template('venues/show.html', venue=venue)
+
+@app.route("/venues/<venue_id>/update", methods=['GET', 'POST'])
+@player_login_required
+def venues_update(venue_id):
+  venue = database. execute("SELECT * FROM Venue WHERE VenueID = %s", (venue_id,)).fetchone()
+  form = forms.VenueForm(request.form, venue_name=venue['Name'], description=venue['VenueDescription'], power_outlets=venue['PowerOutlets'], light=venue['LightingNotes'], supervisor_id=venue['SupervisorID'])
+  form.set_choices()
+  if request.method == "POST" and form.validate():
+    database.execute("UPDATE Venue SET Name = %s, VenueDescription = %s, PowerOutlets = %s, LightingNotes = %s, SupervisorID = %s WHERE VenueID = %s;", (form.venue_name.data, form.description.data, form.power_outlets.data, form.light.data, form.supervisor_id.data, venue['VenueID']))
+    database.commit()
+    flash("You have updated the venue successfully!",'notice')
+    return redirect(url_for('venues'))
+  else:
+    return render_template('venue/edit.html', form=form, venue=venue)
+
+@app.route("/venues/<venue_id>/delete", methods=['POST'])
+@player_login_required
+def venues_delete(venue_id):
+  database.execute("DELETE FROM Venue WHERE VenueID = %s;", (venue_id))
+  database.commit()
+  flash("You have deleted the venue.", 'notice')
+  return redirect(url_for('venues_show', venue_id=venue_id))
+
+@app.route("/equipment")
+def equipment():
+  equipment = database.execute("").fetchall
+  return render_template("equipment/index.html", equipment=equipment)
+
+@app.route("/equipment/create", methods=['GET', 'POST'])
+@player_login_required
+def equipment_create():
+  form = forms.EquipmentForm(request.form)
+  if request.method == "POST" and form.validate():
+    lastrowid = database.execute("INSERT INTO Equipment (ModelAndMake, EquipmentReview, ProcessorSpeed) VALUES (%s, %s, %s);", (form.name.data, form.review.data, form.speed.data)).lastrowid
+    database.commit()
+    flash("You have created the equipment successfully!", 'notice')
+    return redirect(url_for('equipment'))
+  else:
+    return render_template('equipment/new.html', form=form)
+
+@app.route("/venue/<venue_id>/equipment/create", methods=['POST'])
+def venue_equipment_create():

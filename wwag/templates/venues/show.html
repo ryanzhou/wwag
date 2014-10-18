@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Venue Name: {{venue['Name']}}</h1>
+<ul>
+  <li><b>VenueID:</b> {{venue['VenueID']}}</li>
+  <li><b>Description:</b> {{venue['VenueDescription']}}</li>
+  <li><b>Power Outlets:</b> {{venue['PowerOutlets']}}</li>
+  <li><b>Lighting:</b> {{venue['LightingNotes']}}</li>
+  <li><b>Supervisor:</b> {{venue['SupervisorID']}}</li>
+</ul>
+<ul><a href="{{ url_for('venues') }}">Return to All Venues</a></ul>
+{% endblock %}

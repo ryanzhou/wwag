@@ -1,0 +1,5 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Edit Venue - {{ venue['Name'] }}</h1>
+{{ macros.render_form(form, action_text="Update Venue") }}
+{% endblock %}

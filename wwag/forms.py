@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, SelectMultipleField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, TextAreaField, DateTimeField, DateField, DecimalField, SelectMultipleField, validators, IntegerField
 from wwag import app, database
 
 def all_players():
@@ -63,3 +63,18 @@ class GameForm(Form):
 class AchievementForm(Form):
   achievement_name = StringField('Name', [validators.Length(min=3, max=50)])
   reward_body = SelectField('RewardBody', choices=[(c,c) for c in [ "Microsoft", "Apple", "Blizzard", "made-up by WWAG"]])
+
+class VenueForm(Form):
+  venue_name = StringField('Name', [validators.Length(min=3, max=50)])
+  description = StringField('VenueDescription', [validators.Length(min=2, max=50)])
+  power_outlets = IntegerField('PowerOutlets', [validators.DataRequired()])
+  light = StringField('LightingNotes', [validators.Length(min=3, max=50)])
+  supervisor_id = SelectField('Supervisor', coerce=int)
+
+  def set_choices(self):
+    self.supervisor_id.choices = all_players()
+
+class EquipmentForm(Form):
+  model = SelectField('ModelAndMake', choices=[(c, c) for c in["iOS", "Playstation", "PC", "Android", "Xbox", "Wii", "Ouya", "Steam Machine", "3DS"]])
+  review = StringField('EquipmentReview', [validators.Length(min=3, max=50)])
+  speed = StringField('ProcessorSpeed', [validators.Length(min=0, max=50)])

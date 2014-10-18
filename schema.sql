@@ -177,60 +177,6 @@ CREATE TABLE `ViewerOrderLine` (
   FOREIGN KEY (`ViewerOrderID`) REFERENCES `ViewerOrder` (`ViewerOrderID`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE `GameDistributor` (
-  `GameDistributorID` SMALLINT NOT NULL AUTO_INCREMENT,
-  `CompanyName` VARCHAR(100) NOT NULL,
-  `ContactFirstName` VARCHAR(50) NOT NULL,
-  `ContactLastName` VARCHAR(50),
-  `Phone` VARCHAR(14) NOT NULL,
-  PRIMARY KEY (`GameDistributorID`)
-) ENGINE=InnoDB;
-
-CREATE TABLE `GameDistributorAddress` (
-  `AddressID` SMALLINT NOT NULL,
-  `GameDistributorID` SMALLINT NOT NULL,
-  `StartDate` DATE NOT NULL,
-  `EndDate` DATE,
-  PRIMARY KEY (`AddressID`, `GameDistributorID`, `StartDate`),
-  FOREIGN KEY (`AddressID`) REFERENCES `Address` (`AddressID`),
-  FOREIGN KEY (`GameDistributorID`) REFERENCES `GameDistributor` (`GameDistributorID`)
-) ENGINE=InnoDB;
-
-CREATE TABLE `GameDistributorOrder` (
-  `GameDistributorOrderID` SMALLINT NOT NULL AUTO_INCREMENT,
-  `SupplyDate` DATE NOT NULL,
-  `GameDistributorID` SMALLINT NOT NULL,
-  PRIMARY KEY (`GameDistributorOrderID`),
-  FOREIGN KEY (`GameDistributorID`) REFERENCES `GameDistributor` (`GameDistributorID`)
-) ENGINE=InnoDB;
-
-CREATE TABLE `OrderDetail` (
-  `GameDistributorOrderID` SMALLINT NOT NULL,
-  `GameID` SMALLINT NOT NULL,
-  `QuantityOrdered` INT NOT NULL,
-  `ActualUnitPrice` DECIMAL(5,2) NOT NULL,
-  PRIMARY KEY (`GameDistributorOrderID`, `GameID`),
-  FOREIGN KEY (`GameDistributorOrderID`) REFERENCES `GameDistributorOrder` (`GameDistributorOrderID`),
-  FOREIGN KEY (`GameID`) REFERENCES `Game` (`GameID`)
-) ENGINE=InnoDB;
-
-CREATE TABLE `GameShipment` (
-  `GameShipmentID` SMALLINT NOT NULL AUTO_INCREMENT,
-  `DateReceived` DATE,
-  `GameDistributorOrderID` SMALLINT NOT NULL,
-  PRIMARY KEY (`GameShipmentID`),
-  FOREIGN KEY (`GameDistributorOrderID`) REFERENCES `GameDistributor` (`GameDistributorID`)
-) ENGINE=InnoDB;
-
-CREATE TABLE `GameShipmentDetail` (
-  `GameID` SMALLINT NOT NULL,
-  `GameShipmentID` SMALLINT NOT NULL,
-  `QuantityReceived` INT,
-  PRIMARY KEY (`GameID`, `GameShipmentID`),
-  FOREIGN KEY (`GameID`) REFERENCES `Game` (`GameID`),
-  FOREIGN KEY (`GameShipmentID`) REFERENCES `GameShipment` (`GameShipmentID`)
-) ENGINE=InnoDB;
-
 CREATE TABLE `Venue` (
   `VenueID` SMALLINT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(50) NOT NULL,

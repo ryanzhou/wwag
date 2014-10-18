@@ -4,11 +4,17 @@ html {
 
 body {
   padding-top: 100px;
-  background: #FFF;
 }
 
 .container {
   width: 970px !important;
+}
+
+.content {
+  width: 1040px;
+  padding: 40px 0px;
+  margin: auto;
+  background: #FFF;
 }
 
 .navbar {
@@ -37,7 +43,8 @@ space {
 .footer {
   margin-top: 120px;
   padding: 40px;
-  background: #eeeeee;
+  opacity: 0.9;
+  background: #FFF;
 }
 
 .right {

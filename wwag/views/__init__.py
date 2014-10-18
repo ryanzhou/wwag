@@ -34,3 +34,5 @@ import wwag.views.viewers
 import wwag.views.utilities
 import wwag.views.players
 import wwag.views.orders
+import wwag.views.venues
+import wwag.views.equipment

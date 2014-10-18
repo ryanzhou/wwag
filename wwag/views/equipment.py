@@ -4,7 +4,7 @@ from wwag.decorators import player_login_required, viewer_login_required
 
 @app.route("/equipment")
 def equipment():
-  equipment = database.execute("").fetchall
+  equipment = database.execute("SELECT * FROM Equipment").fetchall()
   return render_template("equipment/index.html", equipment=equipment)
 
 @app.route("/equipment/create", methods=['GET', 'POST'])
@@ -18,3 +18,24 @@ def equipment_create():
     return redirect(url_for('equipment'))
   else:
     return render_template('equipment/new.html', form=form)
+
+@app.route("/equipment/update/<equipment_id>", methods=['GET', 'POST'])
+@player_login_required
+def equipment_update(equipment_id):
+  equipment = database.execute("SELECT * FROM Equipment WHERE EquipmentID = %s", (equipment_id)).fetchone()
+  form = forms.EquipmentForm(request.form, model=equipment['ModelAndMake'], review=equipment['Review'], speed=equipment['ProcessorSpeed'])
+  if request.method == "POST" and form.validate():
+    database.execute("UPDATE Equipment SET ModelAndMake = %s, Review = %s, ProcessorSpeed = %s;", (form.model.data, form.review.data, form.speed.data))
+    database.commit()
+    flash("You have successfully updated the equipment!", 'notice')
+    return redirect(url_for('equipment'))
+  else:
+    return render_template('equipment/edit.html', form=form, equipment=equipment)
+
+@app.route("/equipment/<equipment_id>/delete", methods=['POST'])
+@player_login_required
+def equipment_delete(equipment_id):
+  database.execute("DELETE FROM Equipment WHERE EquipmentID = %s", (equipment_id,))
+  database.commit()
+  flash("You have deleted the equipment!", 'notice')
+  return redirect(url_for('equipment'))

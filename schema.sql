@@ -52,7 +52,7 @@ CREATE TABLE `Address` (
   `MinorMunicipality` VARCHAR(50),
   `MajorMunicipality` VARCHAR(50) NOT NULL,
   `GoverningDistrict` VARCHAR(50) NOT NULL,
-  `PostalArea` VARCHAR(4) NOT NULL,
+  `PostalArea` VARCHAR(8) NOT NULL,
   `Country` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`AddressID`)
 ) ENGINE=InnoDB;

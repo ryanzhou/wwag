@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Popular Videos</h1>
+<h1>Videos Directory</h1>
 <div class="list-group">
   {% for video in videos %}
   <a href="{{ url_for('videos_show', video_id=video['VideoID']) }}" class="list-group-item">
@@ -22,7 +22,6 @@
         </div>
       </div>
     </div>
-
   </a>
   {% endfor %}
 </div>

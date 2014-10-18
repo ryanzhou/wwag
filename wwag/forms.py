@@ -63,3 +63,13 @@ class GameForm(Form):
 class AchievementForm(Form):
   achievement_name = StringField('Name', [validators.Length(min=3, max=50)])
   reward_body = SelectField('Reward Body', choices=[(c,c) for c in [ "Microsoft", "Apple", "Blizzard", "WWAG"]])
+
+class AddressForm(Form):
+  street_number = StringField('Street Number', [validators.DataRequired()])
+  street_number_suffix = StringField('Suffix')
+  street_name = StringField('Street Name', [validators.DataRequired()])
+  street_type = StringField('Street Type', [validators.DataRequired()])
+  major_municipality = StringField('Suburb', [validators.DataRequired()])
+  governing_district = StringField('State', [validators.DataRequired()])
+  postal_area = StringField('Postcode', [validators.Length(min=2, max=8)])
+  country = SelectField('Country', choices=[(c,c) for c in ["Australia", "Canada", "United States", "India", "Russia", "France", "Germany", "China", "Indonesia", "Japan", "United Kingdom", "South Korea"]])

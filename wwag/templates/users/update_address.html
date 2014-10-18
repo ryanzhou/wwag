@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Update My Address</h1>
+
+{% call macros.render_form(form, action_text="Update my address") %}
+<div class="row">
+  <div class="col-xs-2">
+    {{ macros.render_field(form.street_number) }}
+  </div>
+  <div class="col-xs-2">
+    {{ macros.render_field(form.street_number_suffix) }}
+  </div>
+  <div class="col-xs-6">
+    {{ macros.render_field(form.street_name )}}
+  </div>
+  <div class="col-xs-2">
+    {{ macros.render_field(form.street_type) }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-3">
+    {{ macros.render_field(form.major_municipality) }}
+  </div>
+  <div class="col-xs-3">
+    {{ macros.render_field(form.governing_district) }}
+  </div>
+  <div class="col-xs-2">
+    {{ macros.render_field(form.postal_area) }}
+  </div>
+</div>
+{{ macros.render_field(form.country) }}
+
+{% endcall %}
+
+{% endblock %}

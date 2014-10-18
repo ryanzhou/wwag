@@ -28,12 +28,15 @@
   <div class="col-xs-4">
     <h3>Achievements</h3>
     {% for achievement in achievements %}
-    <ul>
-      <li><b>Achievement Name</b> {{achievement['Name']}}</li>
-      <li><b>Achievement Time</b> {{achievement['WhenAchieved']}}</li>
-      <li><b>Achievement Reward Body</b> {{achievement['RewardBody']}}</li>
-    </ul>
-    <a href="{{ url_for('instance_runs_achievements_update', instance_run_id=instance_run['InstanceRunID'], achievement_id=achievement['AchievementID'])}}">Edit</a>
+    <blockquote>
+      <p>{{ achievement['Name'] }}</p>
+      <small>{{ achievement['RewardBody'] }} on {{ achievement['WhenAchieved'] | date }}
+        {% if g.get('current_player') %}
+        &nbsp;
+        <a href="{{ url_for('instance_runs_achievements_update', instance_run_id=instance_run['InstanceRunID'], achievement_id=achievement['AchievementID'])}}">Edit</a>
+        {% endif %}
+</small>
+    </blockquote>
     {% endfor %}
   </div>
 </div>
@@ -55,7 +58,7 @@
 
 <space>
 <h3>Add Achievement</h3>
-{% if  g.get('current_player') and instance_run['PlayerID'] == g.current_player.get('PlayerID') %}
+{% if g.get('current_player') %}
 {{ macros.render_form(achievement_form, action_url=url_for('instance_runs_achievements_create', instance_run_id=instance_run['InstanceRunID'])) }}
 {% else %}
 <p>You can't manage this instance run because you're not the supervisor.</p>

@@ -1,9 +1,45 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Welcome to WWAG</h1>
-<p>WWAG is a diverse family of gamers.</p>
-<space>
-<h3>Visitor Area</h3>
-<a href="{{ url_for('instance_runs') }}">Browse Instance Runs</a>
+{% if g.current_viewer %}
+<h2>Welcome back {{ g.current_viewer['Email'] }}!</h2>
+<p>As a registered viewer, you can place orders for premium videos on WWAG.</p>
+<p>
+  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">Browse Videos</a>
+  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">My Past Purchases</a>
+</p>
+<hr>
+<p>Please ensure that your details are up-to-date with us:</p>
+<p>
+  <a href="{{ url_for('users_update_address') }}" >Update My Address</a>
+</p>
+{% else %}
+<h2>Welcome to WWAG</h2>
+<p>WWAG is a diverse family of gamers. We publish new videos everyday and start instance runs regularly. To get started:</p>
+<p><a href="{{ url_for('users_login') }}" class="btn btn-primary btn-sm">Sign In</a> &nbsp; or &nbsp; <a href="{{ url_for('viewers_new') }}" class="btn btn-primary  btn-sm">Sign Up</a></p>
+{% endif %}
+<hr>
+<div class="row">
+  <div class="col-xs-8">
+    <h3>Popular Videos</h3>
+    <space>
+    <div class="list-group">
+      {% for video in videos %}
+      <a href="{{ url_for('videos_show', video_id=video['VideoID']) }}" class="list-group-item">
+        <div class="row">
+          <div class="col-xs-3">
+            <img src="{{ video['URL'] | youtube_thumbnail_url }}" width="120" height="90" />
+          </div>
+          <div class="col-xs-7">
+            <h4 style="margin-top: 10px">{{ video['VideoName'] }}</h4>
+            <p><small>Uploaded on {{ video['CreatedAt'] | date }} for instance run <strong>{{ video['Name'] }}</strong>. This video has been viewed {{ video['ViewCount'] }} times.</small></p>
+          </div>
+          <div class="col-xs-2 right"><div style="font-size: 18px"> {% if video['Price'] > 0 %} ${{ video['Price'] }} {% else %} Free {% endif %}</div></div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<a href="{{ url_for('videos') }}">Browse All Videos</a>
 
 {% endblock %}

@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect, url_for, make_response, session, g
 from wwag import app, database, forms
-from wwag.decorators import player_login_required
+from wwag.decorators import player_login_required, staff_login_required
 from MySQLdb import IntegrityError
 from datetime import datetime
 
@@ -39,6 +39,32 @@ def instance_runs_create():
     return redirect(url_for('instance_runs_show', instance_run_id=lastrowid))
   else:
     return render_template('instance_runs/new.html', instance_run_form=instance_run_form)
+
+@app.route("/instance_runs/<instance_run_id>/update", methods=['GET', 'POST'])
+@player_login_required
+def instance_runs_update(instance_run_id):
+  instance_run = database.execute("SELECT * FROM InstanceRun WHERE InstanceRunID = %s", (instance_run_id,)).fetchone()
+  form = forms.InstanceRunForm(request.form, instance_run_id = instance_run['InstanceRunID'], supervisor_id = instance_run['SupervisorID'], name = instance_run['Name'], recorded_time = instance_run['RecordedTime'], category_name = instance_run['CategoryName'])
+  form.set_choices()
+  if request.method == "POST" and form.validate():
+    database.execute("UPDATE InstanceRun SET SupervisorID = %s, Name = %s, RecordedTime = %s, CategoryName = %s WHERE InstanceRunID = %s;", (form.supervisor_id.data, form.name.data, form.recorded_time.data, form.category_name.data, instance_run_id))
+    database.commit()
+    flash("You have updated the instance_run successfully!", 'notice')
+    return redirect(url_for('instance_runs_show', instance_run_id=instance_run_id))
+  else:
+    return render_template('instance_runs/edit.html', form=form, instance_run=instance_run)
+
+@app.route("/instance_runs/<instance_run_id>/delete", methods=['POST'])
+@staff_login_required
+def instance_runs_delete(instance_run_id):
+  try:
+    database.execute("DELETE FROM InstanceRun WHERE InstanceRunID = %s;", (instance_run_id,))
+    database.commit()
+  except IntegrityError as e:
+    flash("You cannot delete this Instane Run because there are videos linking to it!", 'error')
+    return redirect(url_for('instance_runs_show', instance_run_id=instance_run_id))
+  flash("You have deleted the Instance Run.", 'notice')
+  return redirect(url_for('instance_runs'))
 
 @app.route("/instance_runs/<instance_run_id>/create_player", methods=['POST'])
 @player_login_required

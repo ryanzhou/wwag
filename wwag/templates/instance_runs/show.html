@@ -43,7 +43,7 @@
 <space>
 
 <h3>Add Player</h3>
-{% if  g.get('current_player') and instance_run['PlayerID'] == g.current_player.get('PlayerID') %}
+{% if g.current_staff or instance_run['PlayerID'] == g.current_player['PlayerID'] %}
 {% call macros.render_form(add_player_form, action_url=url_for('instance_runs_create_player', instance_run_id=instance_run['InstanceRunID']), action_text='Add Player') %}
 <div class="row">
 <div class="col-xs-3">
@@ -53,13 +53,21 @@
   {{ macros.render_field(add_player_form.performance_notes, rows=3, placeholder="Maximum length: 300 characters.") }}
 {% endcall %}
 {% else %}
-<p>You can't manage this instance run because you're not the supervisor.</p>
+<p>You can't manage this instance run because you're not the supervisor or a staff member.</p>
 {% endif %}
 
 <space>
 <h3>Add Achievement</h3>
-{% if g.get('current_player') %}
+{% if g.current_staff or instance_run['PlayerID'] == g.current_player['PlayerID'] %}
 {{ macros.render_form(achievement_form, action_url=url_for('instance_runs_achievements_create', instance_run_id=instance_run['InstanceRunID'])) }}
+{% else %}
+<p>You can't manage this instance run because you're not the supervisor or a staff member.</p>
+{% endif %}
+
+<space>
+<h3>Manage</h3>
+{% if g.current_staff or instance_run['PlayerID'] == g.current_player['PlayerID'] %}
+<a href="{{ url_for ('instance_runs_update', instance_run_id=instance_run['InstanceRunID']) }}">Update this Instance Run</a>
 {% else %}
 <p>You can't manage this instance run because you're not the supervisor.</p>
 {% endif %}

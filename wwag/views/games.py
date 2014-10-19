@@ -24,12 +24,12 @@ def games_create():
 @player_login_required
 def games_update(game_id):
   game = database.execute("SELECT * FROM Game WHERE GameID = %s", (game_id,)).fetchone()
-  form = forms.GameForm(request.form, game_name=game['GameName'], genre=game['Genre'], review=game['Review'], star_rating=game['StarRating'], classification_rating=game['ClassificationRating'], platform_notes=game['PlatformNotes'], cost=game['Cost'])
+  form = forms.GameForm(request.form, game_name=game['GameName'], genre=game['Genre'], review=game['Review'], star_rating=game['StarRating'], classification_rating=game['ClassificationRating'], platform_notes=game['PlatformNotes'].split(" "), cost=game['Cost'])
   if request.method == "POST" and form.validate():
     database.execute("UPDATE Game SET GameName = %s, Genre = %s, Review = %s,  StarRating = %s, ClassificationRating = %s, PlatformNotes = %s, Cost = %s WHERE GameID = %s;", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, ' '.join(form.platform_notes.data), form.cost.data, game['GameID']))
     database.commit()
     flash("You have updated the video successfully!", 'notice')
-    return redirect(url_for('games'))
+    return redirect(url_for('games_show', game_id=game_id))
   else:
     return render_template('games/edit.html', form=form, game=game)
 
@@ -37,3 +37,15 @@ def games_update(game_id):
 def games_show(game_id):
   game = database.execute("SELECT * FROM Game WHERE GameID = %s", (game_id,)).fetchone()
   return render_template('games/show.html', game=game)
+
+@app.route("/games/<game_id>/delete", methods=['POST'])
+@player_login_required
+def games_delete(game_id):
+  try:
+    database.execute("DELETE FROM Game WHERE GameID = %s", (game_id,))
+    database.commit()
+  except IntegrityError as e:
+    flash("You cannot delete this game because some videos or instance Run may depend on it!", 'error')
+    return redirect(url_for('games_show', game_id=game_id))
+  flash("You have deleted the game.", 'notice')
+  return redirect(url_for('games'))

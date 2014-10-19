@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>Edit Instance Run - {{ instance_run['Name'] }}</h1>
+{{ macros.render_form(form, action_text="Update Instance Run") }}
+<space>
+<h3>Delete this Instance Run?</h3>
+<p>Are you sure? This action cannot be undone.</p>
+{{ button_to(url_for('instance_runs_delete', instance_run_id=instance_run['InstanceRunID']), "Delete Instance Run", "btn-sm btn-danger") | safe }}
+{% endblock %}

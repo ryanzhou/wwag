@@ -73,7 +73,7 @@ def instance_runs_create_player(instance_run_id):
   instance_run_players = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN Player WHERE InstanceRunID = %s;", (instance_run_id,)).fetchall()
   add_player_form = forms.AddInstanceRunPlayerForm(request.form)
   add_player_form.set_choices()
-  if g.current_player['PlayerID'] == instance_run['PlayerID']:
+  if g.get('current_staff') or g.current_player['PlayerID'] == instance_run['PlayerID']:
     if add_player_form.validate():
       try:
         database.execute("INSERT INTO InstanceRunPlayer (PlayerID, InstanceRunID, PerformanceNotes) VALUES (%s, %s, %s);", (add_player_form.player_id.data, instance_run_id, add_player_form.performance_notes.data))

@@ -4,23 +4,19 @@
 <table class="table">
   <thead>
     <th>Game Name</th>
-    <th>Review</th>
     <th>Genre</th>
     <th>Star Rating</th>
     <th>Classification Rating</th>
-    <th>Promotion</th>
     <th>Price</th>
   </thead>
   <tbody>
     {% for game in games %}
     <tr>
       <td><a href="{{ url_for('games_show', game_id=game['GameID']) }}">{{ game['GameName'] }}</a></td>
-      <td>{{ game['Review'] }}</td>
       <td>{{ game['Genre'] }}</td>
       <td>{{ game['StarRating'] }}</td>
       <td>{{ game['ClassificationRating'] }}</td>
-      <td><a href="{{ game['PromotionLink'] }}">Promotion Link</a></td>
-      <td>{{ game['Cost']}}</td>
+      <td>{{ game['Cost'] | price }}</td>
     </tr>
     {% endfor %}
   </tbody>

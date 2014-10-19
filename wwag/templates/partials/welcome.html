@@ -1,10 +1,18 @@
 {% if g.current_viewer %}
-
+{% if g.current_viewer['ViewerType'] == "C" %}
+<h2>Welcome back {{ g.current_viewer['FirstName'] }}!  <small><span class="label label-success">CrowdFunding Viewer</span></small></h2>
+<p>As a <strong>CrowdFunding Viewer</strong>, you can place orders for premium videos on WWAG without paying.</p>
+{% elif g.current_viewer['ViewerType'] == "P" %}
+<h2>Welcome back {{ g.current_viewer['Email'] }}! <small><span class="label label-warning">Premium Viewer</span></small></h2>
+<p>As a <strong>Premium Viewer</strong>, you can place orders for premium videos on WWAG without paying and access exclusive content.</p>
+<p>Your membership will expire on <strong>{{ g.current_viewer['RenewalDate'] | date }}</strong>.</p>
+{% else %}
 <h2>Welcome back {{ g.current_viewer['Email'] }}!</h2>
 <p>As a registered viewer, you can place orders for premium videos on WWAG.</p>
+{% endif %}
 <p>
   <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">Browse Videos</a>
-  <a href="{{ url_for('videos') }}" class="btn btn-primary btn-sm">My Past Purchases</a>
+  <a href="{{ url_for('orders') }}" class="btn btn-primary btn-sm">My Past Purchases</a>
 </p>
 <hr>
 <p>Please ensure that your details are up-to-date with us:</p>
@@ -16,8 +24,12 @@
 
 <h2>Welcome back {{ g.current_staff['FirstName'] }}!</h2>
 <p>As one of the staff members of the company, you have access to the following additional maintenance features:</p>
-<p><a href="{{ url_for('equipment') }}">Manage Equipment</a> - <a href="#">Manage Orders</a></p>
-
+<p><a href="{{ url_for('equipment') }}">Manage Equipment</a> - <a href="{{ url_for('orders') }}">Manage Orders</a> - <a href="{{ url_for('viewers') }}">Manage Viewers</a></p>
+<hr>
+<p>Please ensure that your details are up-to-date with us:</p>
+<p>
+  <a href="{{ url_for('users_update_address') }}" >Update My Address</a>
+</p>
 {% elif g.current_player %}
 
 <h2>Welcome back {{ g.current_player['FirstName'] }}!</h2>

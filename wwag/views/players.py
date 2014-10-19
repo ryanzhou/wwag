@@ -13,7 +13,8 @@ def players_show(player_id):
   player = database.execute("SELECT * FROM Player WHERE PlayerID = %s;", (player_id,)).fetchone()
   supervisor = database.execute("SELECT * FROM Player WHERE PlayerID = %s;", (player['SupervisorID'],)).fetchone()
   instance_runs = database.execute("SELECT * FROM InstanceRunPlayer NATURAL JOIN InstanceRun WHERE PlayerID = %s;", (player['PlayerID'],)).fetchall()
-  return render_template('players/show.html', player=player, supervisor=supervisor, instance_runs=instance_runs)
+  address = database.execute("SELECT * FROM PlayerAddress NATURAL JOIN Address WHERE EndDate IS NULL AND PlayerID = %s;", (player['PlayerID'],)).fetchone()
+  return render_template('players/show.html', player=player, supervisor=supervisor, instance_runs=instance_runs, address=address)
 
 @app.route("/players/create", methods=['GET', 'POST'])
 @staff_login_required

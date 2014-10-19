@@ -12,10 +12,18 @@ def before_request():
     if player['Type'] == "S":
       g.current_staff = player
   elif session.get('user_type') == "Viewer":
-    viewer = database.execute("SELECT * FROM Viewer WHERE ViewerID = %s;", (session.get('user_id'),)).fetchone()
+    viewer = fetch_viewer(session.get('user_id'))
     if viewer:
+      if viewer['ViewerType'] == "P" and viewer['RenewalDate'] < datetime.today().date():
+        database.execute("DELETE FROM PremiumViewer WHERE ViewerID = %s;", (viewer['ViewerID'],))
+        database.execute("UPDATE Viewer SET ViewerType = 'R' WHERE ViewerID = %s;", (viewer['ViewerID'],))
+        database.commit()
+        viewer = fetch_viewer(session.get('user_id'))
       g.current_viewer = viewer
       g.open_order = open_order()
+
+def fetch_viewer(viewer_id):
+  return database.execute("SELECT * FROM Viewer LEFT JOIN PremiumViewer ON Viewer.ViewerID = PremiumViewer.ViewerID LEFT JOIN CrowdFundingViewer on Viewer.ViewerID = CrowdFundingViewer.ViewerID WHERE Viewer.ViewerID = %s;", (viewer_id,)).fetchone()
 
 def open_order():
   viewer_id = g.current_viewer['ViewerID']

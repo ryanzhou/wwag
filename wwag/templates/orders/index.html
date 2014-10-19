@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Orders
+{% if g.current_staff %}
+<small>All recent orders on WWAG</small>
+{% else %}
+<small>Your recent orders</small>
+{% endif %}
+</h1>
+
+<table class="table">
+  <thead>
+    <th>Order Number</th>
+    <th>Order Date</th>
+    <th>Status</th>
+    <th class="right">Order Total</th>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      <td><a href="{{ url_for('orders_show', order_id=order['ViewerOrderID']) }}">Order #{{ order['ViewerOrderID'] }}</a></td>
+      <td>{{ order['OrderDate'] | date }}</td>
+      <td><span class="label label-default">{{ order['ViewedStatus'] }}<span></td>
+      <td class="right">{{ order['OrderTotal'] | price }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

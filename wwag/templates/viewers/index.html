@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Viewers</h1>
+
+<table class="table">
+  <thead>
+    <th>Viewer ID</th>
+    <th>Type</th>
+    <th>Email</th>
+    <th>Date of Birth</th>
+    <th>Manage</th>
+  </thead>
+  <tbody>
+    {% for viewer in viewers %}
+    <tr>
+      <td>{{ viewer['ViewerID'] }}</td>
+      <td><span class="label label-default">{{ viewer['ViewerType'] | viewer_type }}</span></td>
+      <td>{{ viewer['Email'] }}</td>
+      <td>{{ viewer['DateOfBirth'] | date }}</td>
+      <td><a href="{{ url_for('viewers_update', viewer_id=viewer['ViewerID']) }}">Edit / Upgrade</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

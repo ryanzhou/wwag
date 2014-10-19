@@ -69,7 +69,8 @@ def videos_delete(video_id):
 @app.route("/videos/<video_id>/add_to_basket", methods=['POST'])
 @viewer_login_required
 def videos_add_to_basket(video_id):
-  database.execute("INSERT INTO ViewerOrderLine (VideoID, ViewerOrderID, FlagPerk) VALUES (%s, %s, %s);", (video_id, g.open_order['ViewerOrderID'], 0))
+  flag_perk = (g.current_viewer['ViewerType'] in ['C', 'P'])
+  database.execute("INSERT INTO ViewerOrderLine (VideoID, ViewerOrderID, FlagPerk) VALUES (%s, %s, %s);", (video_id, g.open_order['ViewerOrderID'], flag_perk))
   database.commit()
   flash("Added video to basket!", 'notice')
   return redirect(url_for('basket'))

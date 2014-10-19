@@ -17,6 +17,30 @@ def all_equipment():
   equipment = database.execute("SELECT EquipmentID, ModelAndMake FROM Equipment;").fetchall()
   return [(e['EquipmentID'], e['ModelAndMake']) for e in equipment]
 
+# Attribution: This class was modified from https://gist.github.com/devxoul/7638142
+class RequiredIf(object):
+    """Validates field conditionally.
+
+    Usage::
+
+        login_method = StringField('', [AnyOf(['email', 'facebook'])])
+        email = StringField('', [RequiredIf(login_method='email')])
+        password = StringField('', [RequiredIf(login_method='email')])
+        facebook_token = StringField('', [RequiredIf(login_method='facebook')])
+    """
+    def __init__(self, *args, **kwargs):
+        self.conditions = kwargs
+
+    def __call__(self, form, field):
+        for name, data in self.conditions.iteritems():
+            if name not in form._fields:
+                validators.Optional(form, field)
+            else:
+                condition_field = form._fields.get(name)
+                if condition_field.data == data and not field.data:
+                    validators.Required()(form, field)
+        validators.Optional()(form, field)
+
 class LoginForm(Form):
   email = StringField('Email', [validators.Email()])
   password = PasswordField('Password', [validators.Length(min=6, max=128)])
@@ -117,3 +141,14 @@ class VenueEquipmentForm(Form):
 
   def set_choices(self):
     self.equipment_id.choices = all_equipment()
+
+class ViewerEditForm(Form):
+  email = StringField('Email', [validators.Email()])
+  password = PasswordField('Password', [validators.Length(min=6, max=128), validators.EqualTo('password_confirmation', message='Passwords must match'), validators.Optional()])
+  password_confirmation = PasswordField('Password Confirmation')
+  date_of_birth = DateField('Date of Birth', [validators.DataRequired()])
+  viewer_type = RadioField('Viewer Type', choices=[("R", "Regular"), ("P", "Premium"), ("C", "CrowdFunding")])
+  first_name = StringField('First Name', [RequiredIf(viewer_type='C')])
+  last_name = StringField('Last Name', [RequiredIf(viewer_type='C')])
+  total_amount_donated = DecimalField('Total Amount Donated',  [RequiredIf(viewer_type='C')])
+  renewal_date = DateField('Renewal Date', [RequiredIf(viewer_type='P')])

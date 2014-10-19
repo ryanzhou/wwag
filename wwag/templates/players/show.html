@@ -34,6 +34,14 @@
         <td>VoIP</td>
         <td>{{ player['VoIP'] }}</td>
       </tr>
+      <tr>
+        <td>Address</td>
+        <td>
+            {{ address['StreetNumber'] }} {{ address['StreetNumberSuffix'] }} {{ address['StreetName'] }} {{ address['StreetType'] }}<br>
+            {{ address['MajorMunicipality'] }}, {{ address['GoverningDistrict'] }} {{ address['PostalArea'] }}<br>
+            {{ address['Country'] }}
+        </td>
+      </tr>
     </table>
   </div>
   <div class="col-xs-6">
@@ -51,7 +59,7 @@
 </div>
 <space>
 <h3>Manage this Player</h3>
-{% if g.current_staff or g.current_player['PlayerID'] == player['PlayerID'] %}
+{% if g.current_staff or (g.current_player and g.current_player['PlayerID'] == player['PlayerID']) %}
 <p><a href="{{ url_for('players_update', player_id=player['PlayerID']) }}">Edit this Player</a></p>
 {% else %}
 <p>You don't have the permission to edit this player.</p>

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Edit Viewer</h1>
+{% call macros.render_form(form, action_text="Update Viewer") %}
+{{ macros.render_field(form.email) }}
+{{ macros.render_field(form.password) }}
+<p class="help-block">Leave password blank if you do not want to change it.</p>
+{{ macros.render_field(form.password_confirmation) }}
+<div class="row"><div class="col-xs-2">
+  {{ macros.render_field(form.date_of_birth) }}
+</div></div>
+{{ macros.render_radio_field(form.viewer_type) }}
+<space>
+<h4>Premium Viewer only</h4>
+<hr>
+<div class="row"><div class="col-xs-2">
+  {{ macros.render_field(form.renewal_date) }}
+</div></div>
+<space>
+<h4>CrowdFunding Viewer only</h4>
+<hr>
+<div class="row">
+  <div class="col-xs-4">
+    {{ macros.render_field(form.first_name) }}
+  </div>
+  <div class="col-xs-4">
+    {{ macros.render_field(form.last_name) }}
+  </div>
+</div>
+<div class="row"><div class="col-xs-3">
+  {{ macros.render_field(form.total_amount_donated) }}
+</div></div>
+{% endcall %}
+{% endblock %}

@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
+<a href="{{ url_for('orders') }}"><< Back to All Orders</a>
 <h1>Order #{{ order['ViewerOrderID'] }} <small><span class="label label-default">{{ order['ViewedStatus'] }}</span></small></h1>
 
 {% if order_lines | length %}
@@ -21,13 +22,13 @@
       {% if order_line['FlagPerk'] %}
         <td class="right"><strike>${{ order_line['Price'] }}</strike> <strong>Free</strong></td>
       {% else %}
-        <td class="right">${{ order_line['Price'] }}</td>
+        <td class="right">{{ order_line['Price'] | price }}</td>
       {% endif %}
     </tr>
     {% endfor %}
     <tr>
       <td><strong>Grand Total</strong></td>
-      <td class="right"><strong>${{ order_total }}</strong></td>
+      <td class="right"><strong>{{ order_total | price }}</strong></td>
     </tr>
   </tbody>
 </table>
@@ -39,10 +40,21 @@
 </div>
 {% endif %}
 
-{% if order['ViewedStatus'] == "Open" and order_total > 0 %}
+{% if order['ViewedStatus'] == "Open" and (order_lines | length > 0) %}
 <div class="well well-lg right">
-<p>Instantly access this order for ${{ order_total }}</p>
+<p>Instantly access this order for {{ order_total | price }}</p>
 <p>{{ button_to(url_for('basket_checkout'), "Checkout", "btn-primary") | safe }}</p>
 </div>
 {% endif %}
+
+<space>
+{% if g.current_staff %}
+<h3>Manage Order</h3>
+{% if order['ViewedStatus'] != "Fraud" %}
+<p>{{ button_to(url_for('orders_mark_as_fraud', order_id=order['ViewerOrderID']), "Mark as Fraud", "btn-sm btn-danger") | safe }}</p>
+{% else %}
+<p>This is already a fraudulent order.</p>
+{% endif %}
+{% endif %}
+
 {% endblock %}

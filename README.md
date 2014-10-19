@@ -52,6 +52,7 @@ WWAG follows several industry best practices and design patterns which may be ou
 * **Object-Oriented Design**: This project contains subclasses that inherit from the `Form` class in WTForms.
 * **Semantic URLs**: Instead of query strings, every entity has a permanent and semantic URL. For example,
 `/videos/4` means the video with `VideoID` = 4. This is generally more popular than query strings in modern web application development.
+* **Debugging Mode**: When `DEBUG` is set to `True` in `config.py`, all the database queries that have been run will be logged and displayed at the bottom of each page, including queries that were run in previous requests prior to redirections.
 
 ## External frameworks and libraries
 

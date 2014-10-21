@@ -13,7 +13,7 @@ def games():
 def games_create():
   form = forms.GameForm(request.form)
   if request.method == "POST" and form.validate():
-    lastrowid = database.execute("INSERT INTO Game (GameName, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data,  ' '.join(form.platform_notes.data), form.cost.data)).lastrowid
+    lastrowid = database.execute("INSERT INTO Game (GameName, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data,  ' '.join(form.platform_notes.data), form.promotion_link.data, form.cost.data)).lastrowid
     database.commit()
     flash("You have created a new game successfully!", 'notice')
     return redirect(url_for('games'))

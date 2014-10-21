@@ -158,7 +158,7 @@ CREATE TABLE `Video` (
   `VideoName` VARCHAR(50) NOT NULL,
   `CreatedAt` DATETIME NOT NULL,
   `ViewCount` INT DEFAULT 0,
-  `URL` VARCHAR(50) NOT NULL,
+  `URL` VARCHAR(255) NOT NULL,
   `Price` DECIMAL(5,2),
   `VideoType` VARCHAR(45),
   `InstanceRunID` SMALLINT NOT NULL,

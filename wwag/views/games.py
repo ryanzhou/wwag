@@ -13,7 +13,7 @@ def games():
 def games_create():
   form = forms.GameForm(request.form)
   if request.method == "POST" and form.validate():
-    lastrowid = database.execute("INSERT INTO Game (GameName, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, form.platform_notes.data, form.cost.data)).lastrowid
+    lastrowid = database.execute("INSERT INTO Game (GameName, Genre, Review, StarRating, ClassificationRating, PlatformNotes, PromotionLink, Cost) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data,  ' '.join(form.platform_notes.data), form.cost.data)).lastrowid
     database.commit()
     flash("You have created a new game successfully!", 'notice')
     return redirect(url_for('games'))
@@ -24,9 +24,9 @@ def games_create():
 @player_login_required
 def games_update(game_id):
   game = database.execute("SELECT * FROM Game WHERE GameID = %s", (game_id,)).fetchone()
-  form = forms.GameForm(request.form, game_name=game['GameName'], genre=game['Genre'], review=game['Review'], star_rating=game['StarRating'], classification_rating=game['ClassificationRating'], platform_notes=game['PlatformNotes'].split(" "), cost=game['Cost'])
+  form = forms.GameForm(request.form, game_name=game['GameName'], genre=game['Genre'], review=game['Review'], star_rating=game['StarRating'], classification_rating=game['ClassificationRating'], platform_notes=game['PlatformNotes'].split(" "), promotion_link=game['PromotionLink'], cost=game['Cost'])
   if request.method == "POST" and form.validate():
-    database.execute("UPDATE Game SET GameName = %s, Genre = %s, Review = %s,  StarRating = %s, ClassificationRating = %s, PlatformNotes = %s, Cost = %s WHERE GameID = %s;", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, ' '.join(form.platform_notes.data), form.cost.data, game['GameID']))
+    database.execute("UPDATE Game SET GameName = %s, Genre = %s, Review = %s,  StarRating = %s, ClassificationRating = %s, PlatformNotes = %s, PromotionLink=%s, Cost = %s WHERE GameID = %s;", (form.game_name.data, form.genre.data, form.review.data, form.star_rating.data, form.classification_rating.data, ' '.join(form.platform_notes.data), form.promotion_link.data, form.cost.data, game['GameID']))
     database.commit()
     flash("You have updated the video successfully!", 'notice')
     return redirect(url_for('games_show', game_id=game_id))

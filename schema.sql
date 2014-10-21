@@ -3,12 +3,6 @@
 DROP TABLE IF EXISTS `VenueEquipment`;
 DROP TABLE IF EXISTS `Equipment`;
 DROP TABLE IF EXISTS `Venue`;
-DROP TABLE IF EXISTS `GameShipmentDetail`;
-DROP TABLE IF EXISTS `GameShipment`;
-DROP TABLE IF EXISTS `OrderDetail`;
-DROP TABLE IF EXISTS `GameDistributorOrder`;
-DROP TABLE IF EXISTS `GameDistributorAddress`;
-DROP TABLE IF EXISTS `GameDistributor`;
 DROP TABLE IF EXISTS `ViewerOrderLine`;
 DROP TABLE IF EXISTS `Video`;
 DROP TABLE IF EXISTS `Game`;

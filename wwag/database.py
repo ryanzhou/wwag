@@ -40,8 +40,9 @@ def seed_db():
   db = get_db()
   with app.open_resource('../seeds.sql', mode='r') as f:
     statements = string.split(f.read(), ";")
+    cursor = get_db().cursor()
     for statement in statements[:-1]:
-      execute(statement)
+      cursor.execute(statement)
   commit()
 
 def commit():

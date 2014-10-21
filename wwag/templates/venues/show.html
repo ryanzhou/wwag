@@ -25,7 +25,7 @@
 </table>
 <space>
 <h3>Repurpose this Venue</h3>
-{% if g.current_staff or g.current_player['PlayerID'] == venue['SupervisorID'] %}
+{% if g.current_staff or (g.current_player and g.current_player['PlayerID'] == venue['SupervisorID']) %}
 {% call macros.render_form(form, action_url=url_for("venues_equipment_create", venue_id=venue['VenueID']), action_text="Repurpose Venue") %}
 <div class="row"><div class="col-xs-3">
   {{ macros.render_field(form.equipment_id)}}
@@ -43,7 +43,7 @@
 
 <space>
 <h3>Manage Venue</h3>
-{% if g.current_staff or g.current_player['PlayerID'] == venue['SupervisorID'] %}
+{% if g.current_staff or (g.current_player and g.current_player['PlayerID'] == venue['SupervisorID']) %}
 <p>Edit or delete this venue:</p>
 <p><a href="{{ url_for('venues_update', venue_id=venue['VenueID']) }}">Update this Venue</a></p>
 {% else %}

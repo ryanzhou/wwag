@@ -34,6 +34,15 @@ To make system maintenance easier, there are a few built-in utilities in the web
 
 When the app is running for the first time, you will be redirected to `/utilities` to initialise the database schema and optionally load example data into the schema.
 
+## Seeds data
+We created some sample data in seeds.sql for WWAG for testing purposes. There are some sample users with different kinds of user type for testing various of their capabilities:
+* **Administrator (have the access to do CRUD for all the entities and relationships):username:hannah@wwag.com.au; password:password;
+* **Player (can edit videos, games but may have limitation do delete, can watch all videos for free):username:Steven@hotmail.com; password:password;
+* **Regular Viewer (can only watch free videos, have to make purchase in order to view premium and other types of videos):username:beeldrer@yahoo.com;password:password;
+* **Premium Viewer (can watch all the videos for free until their subscriptions expire, then they need to choose whether to renew subscription or not):username:sposee@hotmail.com; password:password;
+* **Crowd_funding Viewer (can watch all the videos for free):username:anthony.davies@gmail.com; password:password;
+In order to better illustrate WWAG's features, we created some orders and order-lines to show and keep tracking of order history.
+
 ## User features
 
 This WWAG implementation offers many features that exceed the minimum project requirements:
@@ -46,7 +55,7 @@ This WWAG implementation offers many features that exceed the minimum project re
 
 WWAG follows several industry best practices and design patterns which may be out of scope in the course:
 
-* **Templating**: WWAG uses jinja2 to render templates for HTML. Templates are entirely separated from Python code. 
+* **Templating**: WWAG uses jinja2 to render templates for HTML. Templates are entirely separated from Python code.
 * **Model-View-Controller**: WWAG generally follows the MVC pattern to separate business logic and presentation from request processing. Since this is a database project, we have avoided using ORM (which is very common in MVC apps) and thus the design pattern application is an incomplete one.
 * **WSGI-compliant**: Built on the Flask microframework, WWAG is fully WSGI-compliant. This means that it can run efficiently in modern web servers. In fact, when being served in IVLE, the CGI environment will be transformed into WSGI during runtime.
 * **Object-Oriented Design**: This project contains subclasses that inherit from the `Form` class in WTForms.

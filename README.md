@@ -36,12 +36,37 @@ When the app is running for the first time, you will be redirected to `/utilitie
 
 ## Seeds data
 We created some sample data in seeds.sql for WWAG for testing purposes. There are some sample users with different kinds of user type for testing various of their capabilities:
-* **Administrator (have the access to do CRUD for all the entities and relationships):username:hannah@wwag.com.au; password:password;
-* **Player (can edit videos, games but may have limitation do delete, can watch all videos for free):username:Steven@hotmail.com; password:password;
-* **Regular Viewer (can only watch free videos, have to make purchase in order to view premium and other types of videos):username:beeldrer@yahoo.com;password:password;
-* **Premium Viewer (can watch all the videos for free until their subscriptions expire, then they need to choose whether to renew subscription or not):username:sposee@hotmail.com; password:password;
-* **Crowd_funding Viewer (can watch all the videos for free):username:anthony.davies@gmail.com; password:password;
-In order to better illustrate WWAG's features, we created some orders and order-lines to show and keep tracking of order history.
+#### Administrator
+
+have the access to do CRUD for all the entities and relationships
+
+- Username: hannah@wwag.com.au
+- Password: password
+
+#### Player
+
+can edit videos, games but may have limitation do delete, can watch all videos for free
+
+- Username: steven@hotmail.com
+- Password: password
+
+#### Regular Viewer
+can only watch free videos, have to make purchase in order to view premium and other types of videos
+
+- Username: beeldrer@yahoo.com
+- Password: password
+
+#### Premium Viewer
+can watch all the videos for free until their subscriptions expire, then they need to choose whether to renew subscription or not
+
+- Username: sposee@hotmail.com
+- Password: password
+
+#### Crowd Funding Viewer
+can watch all the videos for free
+
+- Username: anthony.davies@gmail.com
+- Password: password
 
 ## User features
 
